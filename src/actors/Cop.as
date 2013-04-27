@@ -17,7 +17,7 @@ package actors {
 		public function Cop(collideMap:FlxTilemap, player:FlxSprite) {
 			_collideMap = collideMap;
 			_player = player
-			super(FlxG.width / 2 + 120, FlxG.height / 2 + 170);
+			super(4.5 * Config.tileSize, 3.5 * Config.tileSize);
 			makeGraphic(20, 20);
 		}
 
@@ -34,8 +34,8 @@ package actors {
 
 			lastPathUpdate = lastPathUpdate + FlxG.elapsed;
 
-			if (lastPathUpdate > 0.5 && canSeePlayer(pathStart, pathEnd)) {
-				lastPathUpdate -= 0.5;
+			if (lastPathUpdate > Config.copPathFindingPeriod && canSeePlayer(pathStart, pathEnd)) {
+				lastPathUpdate -= Config.copPathFindingPeriod;
 				copPath = _collideMap.findPath(pathStart, pathEnd);
 				if (copPath) {
 					followPath(copPath);
