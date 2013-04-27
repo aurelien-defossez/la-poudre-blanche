@@ -34,8 +34,8 @@ package actors {
 
 			lastPathUpdate = lastPathUpdate + FlxG.elapsed;
 
-			if (canSeePlayer(pathStart, pathEnd) && lastPathUpdate > 0.5) {
-				lastPathUpdate = 0;
+			if (lastPathUpdate > 0.5 && canSeePlayer(pathStart, pathEnd)) {
+				lastPathUpdate -= 0.5;
 				copPath = _collideMap.findPath(pathStart, pathEnd);
 				if (copPath) {
 					followPath(copPath);
