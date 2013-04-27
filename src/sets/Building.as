@@ -3,6 +3,7 @@ package sets
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import org.flixel.FlxG;
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxPoint;
@@ -16,8 +17,9 @@ package sets
 		
 		private var _basement:FlxSprite;
 		private var _roof:FlxSprite;
+		private var _alphaTarget:Number;
 		
-		public function set alpha(value:Number) : void { _roof.alpha = value; };
+		public function set alpha(value:Number) : void { _alphaTarget = value; };
 		
 		public function Building(x:int, y:int, basementGroup:FlxGroup, roofGroup:FlxGroup, sprite:Class) {
 			var tempSprite:FlxSprite = new FlxSprite(0, 0, sprite);
@@ -37,7 +39,6 @@ package sets
 			_roof.makeGraphic(Config.tileSize, tempSprite.height - Config.tileSize);
 			_roof.x = x * Config.tileSize;
 			_roof.y = y * Config.tileSize - Config.tileSize * 2;
-			_roof.alpha = Config.buildingAlpha;
 			
 			data = new BitmapData(Config.tileSize, _roof.height);
 			data.copyPixels(tempSprite.pixels, new Rectangle(0, 0, Config.tileSize, _roof.height), new Point());
@@ -54,6 +55,15 @@ package sets
 			add(_roof);
 		}
 		
+		public override function update() : void {
+			super.update();
+			
+			if (_roof.alpha > _alphaTarget) {
+				_roof.alpha = Math.max(_alphaTarget, _roof.alpha - FlxG.elapsed / 0.5);
+			} else if (_roof.alpha < _alphaTarget) {
+				_roof.alpha = Math.min(_alphaTarget, _roof.alpha + FlxG.elapsed / 0.5);
+			}
+		}
 	}
 
 }

@@ -137,6 +137,11 @@ package states
 			var i:int;
 			var j:int;
 			
+			// Update buildings manually
+			for (i = 0; i < _buildings.length; i++) {
+				_buildings.members[i].update();
+			}
+			
 			// Compute player position (in tiles)
 			if (_player.changedTile()) {
 				// Reset buildings alpha
