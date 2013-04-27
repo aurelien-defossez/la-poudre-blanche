@@ -20,6 +20,7 @@ package states
 		private var _backgroundTilemap:FlxTilemap;
 		/** The collision tilemap (building basements) */
 		private var _collideMap:FlxTilemap;
+		private var _mapData:Array;
 		/** The building roofs */
 		private var _buildingRoofs:FlxGroup;
 		/** The building basements */
@@ -34,9 +35,7 @@ package states
 		
 		/** Buildings*/
 		private var _buildings:FlxGroup;
-		/** Player detect box (for line of sight) */
-		private var _hBox:FlxSprite;
-		private var _vBox:FlxSprite;
+		private var _buildingByCoordinate:Array;
 		
 		/** The input controller */
 		private var _inputController:KeyboardController;
@@ -79,10 +78,10 @@ package states
 			_buildingRoofs = new FlxGroup();
 			
 			// Ease the use of map data
-			var mapData:Array = new Array();
+			_mapData = new Array();
 			var rows:Array = collisionMap.split("\n");
 			for (var row:int = 0; row < rows.length; row++) {
-				mapData[row] = rows[row].split(",");
+				_mapData[row] = rows[row].split(",");
 			}
 			
 			var randomMachine:RandomMachine = new RandomMachine(0 /*Math.random() * 5000000*/);
@@ -98,12 +97,16 @@ package states
 			buildingSprites.push(Assets.SKYLINE_PURPLE);
 			
 			_buildings = new FlxGroup();
-			for (row = 0; row < mapData.length; row++ ) {
-				for (var col:int = 0; col < mapData[row].length; col++ ) {
-					if (mapData[row][col] == 1) {
+			_buildingByCoordinate = new Array();
+			for (row = 0; row < _mapData.length; row++ ) {
+				_buildingByCoordinate[row] = new Array();
+				
+				for (var col:int = 0; col < _mapData[row].length; col++ ) {
+					if (_mapData[row][col] == 1) {
 						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
 						var building:Building = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
 						_buildings.add(building);
+						_buildingByCoordinate[row][col] = building;
 					}
 				}
 			}
@@ -111,18 +114,6 @@ package states
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			_actors.add(_cop);
-
-			_hBox = new FlxSprite(0, 0);
-			_hBox.makeGraphic(128 + 128 * 4, 128, 0x55ff0000);
-			_hBox.x = _player.x + _player.width / 2 - _hBox.width / 2;
-			_hBox.y = _player.y + _player.height / 2 - _hBox.height / 2;
-			_hBox.visible = false;
-			
-			_vBox = new FlxSprite(0, 0);
-			_vBox.makeGraphic(128, 128 + 128 * 4, 0x55ff0000);
-			_vBox.x = _player.x + _player.width / 2 - _vBox.width / 2;
-			_vBox.y = _player.y + _player.height / 2 - _vBox.height / 2;
-			_vBox.visible = false;
 			
 			// Add elements to the states
 			// The input controller first
@@ -137,9 +128,6 @@ package states
 
 			// And the buildings roofs
 			add(_buildingRoofs);
-			
-			add(_hBox);
-			add(_vBox);
 		}
 
 		public override function update() : void{
@@ -166,21 +154,71 @@ package states
 		}
 		
 		private function viewRoutine() : void {
-			for (var i:int = 0; i < _buildings.length; i++) _buildings.members[i].alpha = 1;
+			var i:int;
+			var j:int;
 			
-			FlxG.overlap(_vBox, _buildings, manageBuildingRoof);
-			FlxG.overlap(_hBox, _buildings, manageBuildingRoof);
+			// Reset buildings alpha
+			for (i = 0; i < _buildings.length; i++) {
+				_buildings.members[i].alpha = 1;
+			}
 			
-			_hBox.x = _player.x + _player.width / 2 - _hBox.width / 2;
-			_hBox.y = _player.y + _player.height / 2 - _hBox.height / 2;
-			_vBox.x = _player.x + _player.width / 2 - _vBox.width / 2;
-			_vBox.y = _player.y + _player.height / 2 - _vBox.height / 2;
+			// Compute player position (in tiles)
+			var playerPosition:Object = Utils.getTile(_player.x, _player.y);
+			
+			// Fade tiles to the left (and the current tile)
+			i = playerPosition.i;
+			j = playerPosition.j;
+			while(getBuilding(i, j) == null) {
+				fadeTile(i, j);
+				--j;
+			}
+			
+			// Fade tiles to the right
+			j = playerPosition.j + 1;
+			while(getBuilding(i, j) == null) {
+				fadeTile(i, j);
+				++j;
+			}
+			
+			// Fade tiles to the top
+			i = playerPosition.i - 1;
+			j = playerPosition.j;
+			while(getBuilding(i, j) == null) {
+				fadeTile(i, j);
+				--i;
+			}
+			
+			// Fade tiles to the bottom
+			i = playerPosition.i + 1;
+			while(getBuilding(i, j) == null) {
+				fadeTile(i, j);
+				++i;
+			}
+		}
+		
+		private function getBuilding(i:Number, j:Number) : Building {
+			var row:Array = _buildingByCoordinate[i];
+			
+			return (row) ? row[j] : null;
+		}
+		
+		private function fadeTile(i:Number, j:Number) : void {
+			// Fade building below the tile
+			var building:Building = getBuilding(i + 1, j);
+			if (building != null) {
+				building.alpha = Config.buildingAlpha;
+			}
+			
+			// Fade building really below the tile
+			building = getBuilding(i + 2, j);
+			if (building != null) {
+				building.alpha = Config.buildingAlpha;
+			}
 		}
 			
 		private function manageBuildingRoof(player:FlxBasic, roof:FlxBasic) : void {
 			var building:FlxSprite = roof as FlxSprite;
-			if (building != null)
-			{
+			if (building != null) {
 				building.alpha = Config.buildingAlpha;
 			}
 		}
