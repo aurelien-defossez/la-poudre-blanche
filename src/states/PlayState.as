@@ -123,5 +123,11 @@ package states
 
 			FlxG.collide(_collideMap, _player);
 		}
+
+		public override function draw() : void {
+			super.draw();
+
+			_cop.draw();
+		}
 	}
 }

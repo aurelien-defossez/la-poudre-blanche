@@ -26,7 +26,11 @@ package actors {
 			if (canSeePlayer() && lastPathUpdate > 2) {
 				lastPathUpdate = 0;
 				// prepare player start and end position
-				var pathStart:FlxPoint = new FlxPoint(x, y);
+				var pathStart:FlxPoint = new FlxPoint(
+                    x + width / 2,
+                    y + height / 2
+                );
+
 				var pathEnd:FlxPoint = new FlxPoint(
 					player.x + player.width / 2,
 					player.y + player.height / 2
@@ -51,6 +55,14 @@ package actors {
 
 			super.update();
 		}
+
+        public override function draw() : void {
+            super.draw();
+
+            if (Debug.drawCopPaths && copPath) {
+                copPath.drawDebug();
+            }
+        }
 
 		public function canSeePlayer() : Boolean {
 			return true;
