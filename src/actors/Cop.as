@@ -8,42 +8,41 @@ package actors {
 
 	public class Cop extends FlxSprite {
 
-		private var collideMap:FlxTilemap;
-		private var player:FlxSprite;
+		private var _collideMap:FlxTilemap;
+		private var _player:FlxSprite;
 
 		private var copPath:FlxPath;
 		private var lastPathUpdate:Number = 2;
 
 		public function Cop(collideMap:FlxTilemap, player:FlxSprite) {
-			this.collideMap = collideMap;
-			this.player = player
+			_collideMap = collideMap;
+			_player = player
 			super(FlxG.width / 2 + 120, FlxG.height / 2 + 170);
 			makeGraphic(20, 20);
 		}
 
 		public override function update() : void {
+			// prepare cop start and end position
+			var pathStart:FlxPoint = new FlxPoint(
+				x + width / 2,
+				y + height / 2
+			);
+			var pathEnd:FlxPoint = new FlxPoint(
+				_player.x + _player.width / 2,
+				_player.y + _player.height / 2
+			);
+
 			lastPathUpdate = lastPathUpdate + FlxG.elapsed;
-			if (canSeePlayer() && lastPathUpdate > 2) {
+
+			if (canSeePlayer(pathStart, pathEnd) && lastPathUpdate > 0.5) {
 				lastPathUpdate = 0;
-				// prepare player start and end position
-				var pathStart:FlxPoint = new FlxPoint(
-                    x + width / 2,
-                    y + height / 2
-                );
-
-				var pathEnd:FlxPoint = new FlxPoint(
-					player.x + player.width / 2,
-					player.y + player.height / 2
-				);
-
-				// create & follow path
-				copPath = collideMap.findPath(pathStart, pathEnd);
+				copPath = _collideMap.findPath(pathStart, pathEnd);
 				if (copPath) {
 					followPath(copPath);
 				}
 			}
 
-			// Stop player when end of path reached
+			// Stop cop when end of path is reached
 			if (pathSpeed == 0) {
 				if (copPath) {
 					copPath = null;
@@ -64,8 +63,8 @@ package actors {
             }
         }
 
-		public function canSeePlayer() : Boolean {
-			return true;
+		public function canSeePlayer(start:FlxPoint, end:FlxPoint) : Boolean {
+			return _collideMap.ray(start, end);
 		}
 	}
 }
