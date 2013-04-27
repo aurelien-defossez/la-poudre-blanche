@@ -7,3 +7,6 @@ OUTPUT=la-poudre-blanche.swf
 
 all:
 	mxmlc $(MAIN) -sp $(LIB_DIR) $(ASSETS_DIR) $(SRC_DIR) -static-link-runtime-shared-libraries -o $(OUTPUT)
+
+run:
+	firefox $(OUTPUT)
