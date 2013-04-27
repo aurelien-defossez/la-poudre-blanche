@@ -2,6 +2,7 @@ package states
 {
 	import actors.Player;
 	import input.KeyboardController;
+	import maps.Map;
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
@@ -21,6 +22,7 @@ package states
 		private var _backgroundTilemap:FlxTilemap;
 		/** The collision tilemap (building basements) */
 		private var _collideMap:FlxTilemap;
+		private var _map:Map;
 		private var _mapData:Array;
 		/** The building roofs */
 		private var _buildingRoofs:FlxGroup;
@@ -49,7 +51,8 @@ package states
 			_inputController = new KeyboardController();
 
 			// TODO Build this string map procedurally
-			var roadMap:String = Debug.defaultMap;
+			_map:Map = new Map(20, 20);
+			var roadMap:String = _map.getStringMap();
 
 			// The collision map is defined by the read map
 			var collisionMap:String = roadMap.split("0").join("a");
@@ -154,14 +157,14 @@ package states
 				// Fade tiles to the left (and the current tile)
 				i = playerPosition.i;
 				j = playerPosition.j;
-				while(getBuilding(i, j) == null) {
+				while(j > 0 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					--j;
 				}
 				
 				// Fade tiles to the right
 				j = playerPosition.j + 1;
-				while(getBuilding(i, j) == null) {
+				while(j < _map.nCols - 1 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					++j;
 				}
@@ -169,14 +172,14 @@ package states
 				// Fade tiles to the top
 				i = playerPosition.i - 1;
 				j = playerPosition.j;
-				while(getBuilding(i, j) == null) {
+				while(i > 0 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					--i;
 				}
 				
 				// Fade tiles to the bottom
 				i = playerPosition.i + 1;
-				while(getBuilding(i, j) == null) {
+				while (i < _map.nRows - 1 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					++i;
 				}
