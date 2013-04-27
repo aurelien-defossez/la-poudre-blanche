@@ -32,8 +32,12 @@ package states
 		/** All actors are stored in this group, player included */
 		private var _actors:FlxGroup;
 		
+		/** Buildings*/
 		private var _buildings:FlxGroup;
-
+		/** Player detect box (for line of sight) */
+		private var _hBox:FlxSprite;
+		private var _vBox:FlxSprite;
+		
 		/** The input controller */
 		private var _inputController:KeyboardController;
 
@@ -116,6 +120,18 @@ package states
 			_actors.add(_player);
 			_actors.add(_cop);
 
+			_hBox = new FlxSprite(0, 0);
+			_hBox.makeGraphic(128 + 128 * 4, 128, 0x55ff0000);
+			_hBox.x = _player.x + _player.width / 2 - _hBox.width / 2;
+			_hBox.y = _player.y + _player.height / 2 - _hBox.height / 2;
+			_hBox.visible = false;
+			
+			_vBox = new FlxSprite(0, 0);
+			_vBox.makeGraphic(128, 128 + 128 * 4, 0x55ff0000);
+			_vBox.x = _player.x + _player.width / 2 - _vBox.width / 2;
+			_vBox.y = _player.y + _player.height / 2 - _vBox.height / 2;
+			_vBox.visible = false;
+			
 			// Add elements to the states
 			// The input controller first
 			add(_inputController);
@@ -129,6 +145,9 @@ package states
 
 			// And the buildings roofs
 			add(_buildingRoofs);
+			
+			add(_hBox);
+			add(_vBox);
 		}
 
 		public override function update() : void{
@@ -157,11 +176,18 @@ package states
 		private function viewRoutine() : void {
 			for (var i:int = 0; i < _buildings.length; i++) _buildings.members[i].alpha = 1;
 			
-			FlxG.overlap(_player, _buildings, manageBuildingRoof);
+			FlxG.overlap(_vBox, _buildings, manageBuildingRoof);
+			FlxG.overlap(_hBox, _buildings, manageBuildingRoof);
+			
+			_hBox.x = _player.x + _player.width / 2 - _hBox.width / 2;
+			_hBox.y = _player.y + _player.height / 2 - _hBox.height / 2;
+			_vBox.x = _player.x + _player.width / 2 - _vBox.width / 2;
+			_vBox.y = _player.y + _player.height / 2 - _vBox.height / 2;
 		}
 			
 		private function manageBuildingRoof(player:FlxBasic, roof:FlxBasic) : void {
-			var building:Building = roof as Building;
+			
+			var building:FlxSprite = roof as FlxSprite;
 			if (building != null)
 			{
 				building.alpha = 0.5;
