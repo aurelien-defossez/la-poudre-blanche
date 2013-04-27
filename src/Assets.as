@@ -26,5 +26,23 @@ package
 
 		// Actors
 		[Embed(source = "/gfx/heenok.png")] public static const HEENOK_TILESET:Class;
+		[Embed(source = "/gfx/gerard.png")] public static const GERARD_TILESET:Class;
+
+		// Actors tilesheets data
+		public static const DIRECTIONS:Object = {
+			south: 0,
+			north: 1,
+			east: 2,
+			west: 3
+		};
+
+		public static const ANIMATIONS:Object = {
+			walk: [0, 1, 2, 3],
+			run: [4, 1, 3, 5]
+		}
+
+		public static const TOTAL_FRAMES:Number = 7;
+		public static const STANDING_FRAME:Number = 6;
+
 	}
 }

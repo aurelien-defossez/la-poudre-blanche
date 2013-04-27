@@ -8,6 +8,8 @@ package actors {
 
 	public class Cop extends FlxSprite {
 
+		public var direction:FlxPoint;
+
 		private var _collideMap:FlxTilemap;
 		private var _player:Player;
 
@@ -15,20 +17,37 @@ package actors {
 		private var lastPathUpdate:Number = 2;
 
 		private var _bombTimer:Number;
-		
+
 		public function Cop(collideMap:FlxTilemap, player:Player) {
 			_collideMap = collideMap;
 			_player = player
+
 			super(1.5 * Config.tileSize, 1.5 * Config.tileSize);
-			makeGraphic(20, 20);
 			_bombTimer = 0;
+
+			loadGraphic(Assets.GERARD_TILESET, true, false, 64, 64)
+
+			direction = new FlxPoint(1, 0);
+			frame = Assets.STANDING_FRAME;
+
+			for (var dir:String in Assets.DIRECTIONS) {
+				for (var anim:String in Assets.ANIMATIONS) {
+					var key:String = anim + "-" + dir;
+					var frames:Array = new Array();
+					for each (var f:Number in Assets.ANIMATIONS[anim]) {
+						frames.push(f + Assets.DIRECTIONS[dir] * Assets.TOTAL_FRAMES);
+					}
+
+					addAnimation(key, frames, 10, true);
+				}
+			}
 		}
 
 		public override function update() : void {
 			if (_bombTimer > 0) {
 				// Bombed : do crazy stuff or nothing
 				_bombTimer -= FlxG.elapsed;
-				
+
 				if (copPath) {
 					copPath = null;
 					stopFollowingPath(true);
@@ -60,6 +79,20 @@ package actors {
 					velocity.y = 0;
 				}
 			}
+
+			if (pathAngle > 45 && pathAngle <= 135) {
+				play("walk-east");
+			}
+			else if (pathAngle > 135 && pathAngle <= 225) {
+				play("walk-south");
+			}
+			else if (pathAngle > 225 && pathAngle <= 315) {
+				play("walk-west");
+			}
+			else if (pathAngle > 315 || pathAngle <= 45) {
+				play("walk-north");
+			}
+
 			super.update();
 		}
 
@@ -70,7 +103,7 @@ package actors {
                 copPath.drawDebug();
             }
         }
-		
+
 		public function getCenter() : FlxPoint {
 			return new FlxPoint(
 				x + width / 2,
@@ -81,10 +114,10 @@ package actors {
 		public function canSeePlayer(start:FlxPoint, end:FlxPoint) : Boolean {
 			return _collideMap.ray(start, end);
 		}
-		
+
 		public function takeBomb() : void {
 			_bombTimer = Config.ninjaBombTime;
-			
+
 			// Stop previous movement
 			velocity.x = 0;
 			velocity.y = 0;

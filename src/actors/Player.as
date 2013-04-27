@@ -16,36 +16,21 @@ package actors {
 		private var _inputController:Controller;
 		private var _tileIndex:Object;
 		private var _state:PlayState;
-		
+
 		private var _drugCounter:int
-		
+
 		private var _runTimer:Number;
 		/** Each drug consumption increase this counter : use it to make crazy things */
 		private var _intoxication:int;
-		
-		private const DIRECTIONS:Object = {
-			south: 0,
-			north: 1,
-			east: 2,
-			west: 3
-		};
 
-		private const ANIMATIONS:Object = {
-			walk: [0, 1, 2, 3],
-			run: [4, 1, 3, 5]
-		}
-
-		private const TOTAL_FRAMES:Number = 7;
-		private const STANDING_FRAME:Number = 6;
-		
 		public function get drugCounter() : int { return _drugCounter; };
 		public function set drugCounter(value:int) : void { _drugCounter = value; };
-		
+
 		public function get runTimer() : Number { return _runTimer; };
-		
+
 		public function Player(collideMap:FlxTilemap, inputController:Controller, state:PlayState, i:Number, j:Number) {
 			super(j * Config.tileSize, i * Config.tileSize);
-			
+
 			_state = state;
 			_drugCounter = Config.baseDrugCounter;
 			_intoxication = 0;
@@ -57,14 +42,14 @@ package actors {
 
 			direction = new FlxPoint(1, 0);
 			moveThisFrame = false;
-			frame = STANDING_FRAME;
+			frame = Assets.STANDING_FRAME;
 
-			for (var dir:String in DIRECTIONS) {
-				for (var anim:String in ANIMATIONS) {
+			for (var dir:String in Assets.DIRECTIONS) {
+				for (var anim:String in Assets.ANIMATIONS) {
 					var key:String = anim + "-" + dir;
 					var frames:Array = new Array();
-					for each (var f:Number in ANIMATIONS[anim]) {
-						frames.push(f + DIRECTIONS[dir] * TOTAL_FRAMES);
+					for each (var f:Number in Assets.ANIMATIONS[anim]) {
+						frames.push(f + Assets.DIRECTIONS[dir] * Assets.TOTAL_FRAMES);
 					}
 
 					addAnimation(key, frames, 10, true);
@@ -82,7 +67,7 @@ package actors {
 				_runTimer = 0;
 				speed = Config.playerWalkSpeed;
 			}
-			
+
 			if (_inputController.up) {
 				direction.y = -1;
 				move();
@@ -113,7 +98,7 @@ package actors {
 					_drugCounter--;
 					_runTimer += Config.runTime;
 				}
-				
+
 				// Ninja powder
 				if (_inputController.actionB)
 				{
@@ -121,7 +106,7 @@ package actors {
 					_state.dropBomb(x, y);
 				}
 			}
-			
+
 			if (moveThisFrame) {
 				x = x + direction.x * speed;
 				y = y + direction.y * speed;
@@ -141,19 +126,19 @@ package actors {
 			}
 			else {
 				if (direction.x == 1) {
-					frame = TOTAL_FRAMES * DIRECTIONS["south"] + STANDING_FRAME;
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
 				}
 				else if (direction.x == -1) {
-					frame = TOTAL_FRAMES * DIRECTIONS["north"] + STANDING_FRAME;
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
 				}
 				else if (direction.y == 1) {
-					frame = TOTAL_FRAMES * DIRECTIONS["east"] + STANDING_FRAME;
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
 				}
 				else if (direction.y == -1) {
-					frame = TOTAL_FRAMES * DIRECTIONS["west"] + STANDING_FRAME;
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
 				}
 				else {
-					frame = TOTAL_FRAMES * DIRECTIONS["south"] + STANDING_FRAME;
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
 				}
 			}
 
