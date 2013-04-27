@@ -1,5 +1,6 @@
 package states 
 {
+	import input.KeyboardController;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxSprite;
@@ -24,12 +25,18 @@ package states
 		/** All actors are stored in this group, player included */
 		private var _actors:FlxGroup;
 		
+		/** The input controller */
+		private var _inputController:KeyboardController;
+		
 		public function PlayState() 
 		{
 		}
 		
 		public override function create() : void
 		{
+			// The input controller
+			_inputController = new KeyboardController();
+			
 			// TODO Build this string map procedurally
 			var roadMap:String = "0,0,0,0,0,0,0\n" +
 								 "0,1,1,1,1,1,0\n" +
@@ -73,6 +80,7 @@ package states
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			
+			add(_inputController);
 			add(_backgroundTilemap);
 			add(_collideMap);
 			add(_player);
@@ -84,15 +92,15 @@ package states
 			super.update();
 			
 			var speed:int = 2;
-			if (FlxG.keys.pressed("UP")) {
+			if (_inputController.up) {
 				_player.y -= speed;
-			}else if (FlxG.keys.pressed("DOWN")) {
+			}else if (_inputController.down) {
 				_player.y += speed;
 			}
 			
-			if (FlxG.keys.pressed("LEFT")) {
+			if (_inputController.left) {
 				_player.x -= speed;
-			}else if (FlxG.keys.pressed("RIGHT")) {
+			}else if (_inputController.right) {
 				_player.x += speed;
 			}
 			
