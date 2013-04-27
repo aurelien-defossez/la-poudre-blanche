@@ -15,9 +15,9 @@ package states
 	{
 		/** The road background tilemap */
 		private var _backgroundTilemap:FlxTilemap;
-		/** The collision tilemap (invisible) */
+		/** The collision tilemap (building basements) */
 		private var _collideMap:FlxTilemap;
-		/** Buildings group */
+		/** The buildings */
 		private var _buildingsGroup:FlxGroup;
 		
 		/** The player */
@@ -60,7 +60,6 @@ package states
 			_collideMap = new FlxTilemap();
 			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, 128, 128);
 			
-			
 			// The player
 			_player = new FlxSprite(FlxG.width / 2 - 10, FlxG.height / 2 - 10);
 			_player.makeGraphic(20, 20);
@@ -80,10 +79,17 @@ package states
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			
+			// The input controller first
 			add(_inputController);
+			
+			// The background part
 			add(_backgroundTilemap);
 			add(_collideMap);
-			add(_player);
+			
+			// The actors (player, cops, unicorns...)
+			add(_actors);
+			
+			// And the bnuildings roofs
 			add(_buildingsGroup);
 		}
 		
