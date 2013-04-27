@@ -18,8 +18,10 @@ package states
 		private var _backgroundTilemap:FlxTilemap;
 		/** The collision tilemap (building basements) */
 		private var _collideMap:FlxTilemap;
-		/** The buildings */
-		private var _buildingsGroup:FlxGroup;
+		/** The building roofs */
+		private var _buildingRoofs:FlxGroup;
+		/** The building basements */
+		private var _buildingBasements:FlxGroup;
 
 		/** The player */
 		private var _player:FlxSprite;
@@ -40,6 +42,7 @@ package states
 
 			// TODO Build this string map procedurally
 			var roadMap:String = "0,0,0,0,0,0,0\n" +
+								 "0,0,0,0,1,0,0\n" +
 								 "0,1,1,1,1,1,0\n" +
 								 "0,0,1,0,1,0,0\n" +
 								 "0,1,1,1,1,1,0\n" +
@@ -66,14 +69,15 @@ package states
 			_player.makeGraphic(20, 20);
 
 			_cop = new Cop(_collideMap, _player);
-			add(_cop);
 
 			// Make the camera follow the player
 			FlxG.camera.follow(_player);
 			_backgroundTilemap.follow();
 
 			// Create the buildings
-			_buildingsGroup = new FlxGroup();
+			_buildingBasements = new FlxGroup();
+			_buildingRoofs = new FlxGroup();
+			
 			var data:Array = collisionMap.split(",");
 			var mapWidth:int = _collideMap.width;
 			for (var i:uint = 0; i < data.length; i++) {
@@ -82,6 +86,7 @@ package states
 
 			_actors = new FlxGroup();
 			_actors.add(_player);
+			//_actors.add(_cop);
 			
 			// Add elements to the states
 			// The input controller first
@@ -94,8 +99,8 @@ package states
 			// The actors (player, cops, unicorns...)
 			add(_actors);
 			
-			// And the bnuildings roofs
-			add(_buildingsGroup);
+			// And the buildings roofs
+			add(_buildingRoofs);
 		}
 
 		public override function update() : void{
