@@ -11,6 +11,7 @@ package states
 	import sets.Building;
 
 	import actors.Cop;
+	import actors.Player;
 
 	/**
 	 * ...
@@ -33,11 +34,11 @@ package states
 		private var _cop:Cop;
 		/** All actors are stored in this group, player included */
 		private var _actors:FlxGroup;
-		
+
 		/** Buildings*/
 		private var _buildings:FlxGroup;
 		private var _buildingByCoordinate:Array;
-		
+
 		/** The input controller */
 		private var _inputController:KeyboardController;
 
@@ -66,7 +67,7 @@ package states
 
 			// The player
 			_player = new Player(_collideMap, _inputController, 2.5, 3.5);
-			
+
 			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
 
@@ -77,14 +78,14 @@ package states
 			// Create the buildings
 			_buildingBasements = new FlxGroup();
 			_buildingRoofs = new FlxGroup();
-			
+
 			// Ease the use of map data
 			_mapData = new Array();
 			var rows:Array = collisionMap.split("\n");
 			for (var row:int = 0; row < rows.length; row++) {
 				_mapData[row] = rows[row].split(",");
 			}
-			
+
 			var randomMachine:RandomMachine = new RandomMachine(0 /*Math.random() * 5000000*/);
 			var buildingSprites:Vector.<Class> = new Vector.<Class>();
 			buildingSprites.push(Assets.BUILDING_1);
@@ -96,12 +97,12 @@ package states
 			buildingSprites.push(Assets.GARDEN);
 			buildingSprites.push(Assets.SKYLINE_GREEN);
 			buildingSprites.push(Assets.SKYLINE_PURPLE);
-			
+
 			_buildings = new FlxGroup();
 			_buildingByCoordinate = new Array();
 			for (row = 0; row < _mapData.length; row++ ) {
 				_buildingByCoordinate[row] = new Array();
-				
+
 				for (var col:int = 0; col < _mapData[row].length; col++ ) {
 					if (_mapData[row][col] == 1) {
 						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
@@ -111,11 +112,11 @@ package states
 					}
 				}
 			}
-			
+
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			_actors.add(_cop);
-			
+
 			// Add elements to the states
 			// The input controller first
 			add(_inputController);
@@ -136,21 +137,21 @@ package states
 
 			var i:int;
 			var j:int;
-			
+
 			// Update buildings manually
 			for (i = 0; i < _buildings.length; i++) {
 				_buildings.members[i].update();
 			}
-			
+
 			// Compute player position (in tiles)
 			if (_player.changedTile()) {
 				// Reset buildings alpha
 				for (i = 0; i < _buildings.length; i++) {
 					_buildings.members[i].alpha = 1;
 				}
-				
+
 				var playerPosition:Object = _player.getTileIndex();
-				
+
 				// Fade tiles to the left (and the current tile)
 				i = playerPosition.i;
 				j = playerPosition.j;
@@ -158,14 +159,14 @@ package states
 					fadeTile(i, j);
 					--j;
 				}
-				
+
 				// Fade tiles to the right
 				j = playerPosition.j + 1;
 				while(getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					++j;
 				}
-				
+
 				// Fade tiles to the top
 				i = playerPosition.i - 1;
 				j = playerPosition.j;
@@ -173,7 +174,7 @@ package states
 					fadeTile(i, j);
 					--i;
 				}
-				
+
 				// Fade tiles to the bottom
 				i = playerPosition.i + 1;
 				while(getBuilding(i, j) == null) {
@@ -182,33 +183,33 @@ package states
 				}
 			}
 		}
-		
+
 		private function getBuilding(i:Number, j:Number) : Building {
 			var row:Array = _buildingByCoordinate[i];
-			
+
 			return (row) ? row[j] : null;
 		}
-		
+
 		private function fadeTile(i:Number, j:Number) : void {
 			// Fade building below the tile
 			var building:Building = getBuilding(i + 1, j);
 			if (building != null) {
 				building.alpha = Config.buildingAlpha;
 			}
-			
+
 			// Fade building really below the tile
 			building = getBuilding(i + 2, j);
 			if (building != null) {
 				building.alpha = Config.buildingAlpha;
 			}
 		}
-			
+
 		private function manageBuildingRoof(player:FlxBasic, roof:FlxBasic) : void {
 			var building:FlxSprite = roof as FlxSprite;
 			if (building != null) {
 				building.alpha = Config.buildingAlpha;
 			}
 		}
-		
+
 	}
 }
