@@ -23,7 +23,7 @@ package states
 		/** The collision tilemap (building basements) */
 		private var _collideMap:FlxTilemap;
 		private var _map:Map;
-		private var _mapData:Array;
+
 		/** The building roofs */
 		private var _buildingRoofs:FlxGroup;
 		/** The building basements */
@@ -51,21 +51,15 @@ package states
 			_inputController = new KeyboardController();
 
 			// TODO Build this string map procedurally
-			_map:Map = new Map(20, 20);
-			var roadMap:String = _map.getStringMap();
-
-			// The collision map is defined by the read map
-			var collisionMap:String = roadMap.split("0").join("a");
-			collisionMap = collisionMap.split("1").join("0");
-			collisionMap = collisionMap.split("a").join("1");
-
+			_map = new Map(20, 20);
+			
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
-			_backgroundTilemap.loadMap(roadMap, Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
+			_backgroundTilemap.loadMap(_map.getRoadMap(), Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
 
 			// Collision tilemap
 			_collideMap = new FlxTilemap();
-			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
+			_collideMap.loadMap(_map.getCollisionMap(), Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 
 			// The player
 			_player = new Player(_collideMap, _inputController, 2.5, 3.5);
@@ -81,13 +75,6 @@ package states
 			_buildingBasements = new FlxGroup();
 			_buildingRoofs = new FlxGroup();
 			
-			// Ease the use of map data
-			_mapData = new Array();
-			var rows:Array = collisionMap.split("\n");
-			for (var row:int = 0; row < rows.length; row++) {
-				_mapData[row] = rows[row].split(",");
-			}
-			
 			var randomMachine:RandomMachine = new RandomMachine(0 /*Math.random() * 5000000*/);
 			var buildingSprites:Vector.<Class> = new Vector.<Class>();
 			buildingSprites.push(Assets.BUILDING_1);
@@ -102,11 +89,12 @@ package states
 			
 			_buildings = new FlxGroup();
 			_buildingByCoordinate = new Array();
-			for (row = 0; row < _mapData.length; row++ ) {
+			
+			for (var row:int = 0; row < _map.nRows; row++ ) {
 				_buildingByCoordinate[row] = new Array();
 				
-				for (var col:int = 0; col < _mapData[row].length; col++ ) {
-					if (_mapData[row][col] == 1) {
+				for (var col:int = 0; col < _map.nCols; col++ ) {
+					if (_map.at(row, col) == 1) {
 						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
 						var building:Building = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
 						_buildings.add(building);

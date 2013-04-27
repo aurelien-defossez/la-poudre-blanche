@@ -27,14 +27,14 @@ package maps
 				_map[i] = new Array();
 				
 				for (j = 0;  j < nCols; j++) {
-					_map[i][j] = 0;
+					_map[i][j] = 1;
 				}
 			}
 			
 			// Create main strees
 			for (i = 1;  i < nRows - 1; i += 2) {
 				for (j = 1;  j < nCols - 1; j++) {
-					_map[i][j] = 1;
+					_map[i][j] = 0;
 				}
 			}
 			
@@ -43,7 +43,7 @@ package maps
 				var intersections:int = Math.round(Math.random() * nCols / 2);
 				
 				for (k = 0; k < intersections; k++) {
-					_map[i][3 + Math.floor(Math.random() * nCols - 6)] = 1;
+					_map[i][3 + Math.floor(Math.random() * nCols - 6)] = 0;
 				}
 			}
 			
@@ -52,16 +52,16 @@ package maps
 				var buildings:int = Math.round(Math.random() * nCols / 5);
 				
 				for (k = 0; k < buildings; k++) {
-					_map[i][1 + Math.floor(Math.random() * nCols - 2)] = 0;
+					_map[i][1 + Math.floor(Math.random() * nCols - 2)] = 1;
 				}
 			}
 		}
 		
-		public function getMap() : Array {
-			return _map;
+		public function at(i:int, j:int) : int {
+			return _map[i][j];
 		}
 		
-		public function getStringMap() : String {
+		public function getCollisionMap() : String {
 			var rows:Array = new Array();
 			
 			for (var i:int = 0; i < nRows; i++ ) {
@@ -69,6 +69,19 @@ package maps
 			}
 			
 			return rows.join("\n");
+		}
+		
+		public function getRoadMap() : String {
+			var buffer:String = "";
+			
+			for (var i:int = 0; i < nRows; i++ ) {
+				for (var j:int = 0; j < nCols; j++ ) {
+					buffer += ((_map[i][j] == 0) ? 1 : 0) + ",";
+				}
+				buffer += "\n";
+			}
+			
+			return buffer;
 		}
 	}
 
