@@ -167,11 +167,5 @@ package states
 				building.alpha = 0.5;
 			}
 		}
-		
-		public override function draw() : void {
-			super.draw();
-
-			_cop.draw();
-		}
 	}
 }
