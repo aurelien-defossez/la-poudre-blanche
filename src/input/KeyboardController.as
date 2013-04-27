@@ -4,11 +4,9 @@ package input
 	 * ...
 	 * @author Alex Frêne
 	 */
-	public class KeyboardController extends Controller 
-	{
+	public class KeyboardController extends Controller {
 		
-		public function KeyboardController() 
-		{
+		public function KeyboardController() {
 			super();
 			_leftKey = "LEFT";
 			_rightKey = "RIGHT";

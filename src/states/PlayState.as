@@ -13,8 +13,7 @@ package states
 	 * ...
 	 * @author Alex Frêne
 	 */
-	public class PlayState extends FlxState
-	{
+	public class PlayState extends FlxState {
 		/** The road background tilemap */
 		private var _backgroundTilemap:FlxTilemap;
 		/** The collision tilemap (building basements) */
@@ -32,12 +31,10 @@ package states
 		/** The input controller */
 		private var _inputController:KeyboardController;
 
-		public function PlayState()
-		{
+		public function PlayState() {
 		}
 
-		public override function create() : void
-		{
+		public override function create() : void {
 			// The input controller
 			_inputController = new KeyboardController();
 
@@ -101,8 +98,7 @@ package states
 			add(_buildingsGroup);
 		}
 
-		public override function update() : void
-		{
+		public override function update() : void{
 			super.update();
 
 			var speed:int = 2;
@@ -123,5 +119,4 @@ package states
 			FlxG.collide(_collideMap, _player);
 		}
 	}
-
 }

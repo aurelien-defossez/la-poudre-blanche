@@ -6,23 +6,20 @@ package actors
     import org.flixel.FlxSprite;
     import org.flixel.FlxTilemap;
 
-    public class Cop extends FlxSprite
-    {
+    public class Cop extends FlxSprite {
         private var collideMap:FlxTilemap;
         private var player:FlxSprite;
 
         private var copPath:FlxPath;
 
-        public function Cop(CollideMap:FlxTilemap, Player:FlxSprite)
-        {
+        public function Cop(CollideMap:FlxTilemap, Player:FlxSprite) {
             collideMap = CollideMap;
             player = Player
             super(FlxG.width / 2 - 30, FlxG.height / 2 - 10);
             makeGraphic(20, 20);
         }
 
-        public override function update() : void
-        {
+        public override function update() : void {
             // if path already exists, destroy it
             if (copPath) {
                 stopFollowingPath(true);

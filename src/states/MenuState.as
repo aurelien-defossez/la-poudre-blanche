@@ -7,21 +7,16 @@ package states
 	 * ...
 	 * @author Alex Frêne
 	 */
-	public class MenuState extends FlxState 
-	{
+	public class MenuState extends FlxState {
 		
-		public function MenuState() 
-		{
-			
+		public function MenuState() {
 		}
 		
-		public override function create() : void
-		{
+		public override function create() : void {
 			add(new FlxText(25, 25, 100, "La Poudre Blanche"));
 		}
 		
-		public override function update() : void
-		{
+		public override function update() : void {
 		}
 	}
 
