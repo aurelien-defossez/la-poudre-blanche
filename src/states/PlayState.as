@@ -1,6 +1,7 @@
 package states 
 {
 	import org.flixel.FlxG;
+	import org.flixel.FlxGroup;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxTilemap;
@@ -11,18 +12,25 @@ package states
 	 */
 	public class PlayState extends FlxState 
 	{
+		/** The road background tilemap */
 		private var _backgroundTilemap:FlxTilemap;
+		/** The collision tilemap (invisible) */
 		private var _collideMap:FlxTilemap;
+		/** Buildings group */
+		private var _buildingsGroup:FlxGroup;
 		
+		/** The player */
 		private var _player:FlxSprite;
+		/** All actors are stored in this group, player included */
+		private var _actors:FlxGroup;
 		
 		public function PlayState() 
 		{
-			
 		}
 		
 		public override function create() : void
 		{
+			// TODO Build this string map procedurally
 			var roadMap:String = "0,0,0,0,0,0,0\n" +
 								 "0,1,1,1,1,1,0\n" +
 								 "0,0,1,0,1,0,0\n" +
@@ -31,25 +39,44 @@ package states
 								 "0,1,0,1,0,1,0\n" +
 								 "0,1,1,1,1,1,0\n" +
 								 "0,0,0,0,0,0,0";
-							 
+			
+			// The collision map is defined by the read map
 			var collisionMap:String = roadMap.split("0").join("a");
 			collisionMap = collisionMap.split("1").join("0");
 			collisionMap = collisionMap.split("a").join("1");
 			
+			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
 			_backgroundTilemap.loadMap(roadMap, Assets.ROAD_TILESET, 128, 128, FlxTilemap.AUTO, 0, 1, 2);
-			add(_backgroundTilemap);
 			
+			// Collision tilemap
 			_collideMap = new FlxTilemap();
 			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, 128, 128);
-			add(_collideMap);
 			
+			
+			// The player
 			_player = new FlxSprite(FlxG.width / 2 - 10, FlxG.height / 2 - 10);
 			_player.makeGraphic(20, 20);
-			add(_player);
 		
-			_backgroundTilemap.follow();
+			// Make the camera follow the player
 			FlxG.camera.follow(_player);
+			_backgroundTilemap.follow();
+			
+			// Create the buildings
+			_buildingsGroup = new FlxGroup();
+			var data:Array = collisionMap.split(",");
+			var mapWidth:int = _collideMap.width;
+			for (var i:uint = 0; i < data.length; i++) {
+				
+			}
+			
+			_actors = new FlxGroup();
+			_actors.add(_player);
+			
+			add(_backgroundTilemap);
+			add(_collideMap);
+			add(_player);
+			add(_buildingsGroup);
 		}
 		
 		public override function update() : void
