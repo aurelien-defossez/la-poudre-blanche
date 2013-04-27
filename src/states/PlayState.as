@@ -49,15 +49,7 @@ package states
 			_inputController = new KeyboardController();
 
 			// TODO Build this string map procedurally
-			var roadMap:String = "0,0,0,0,0,0,0\n" +
-								 "0,0,0,0,1,0,0\n" +
-								 "0,1,1,1,1,1,0\n" +
-								 "0,0,1,0,1,0,0\n" +
-								 "0,1,1,1,1,1,0\n" +
-								 "0,1,0,1,0,1,0\n" +
-								 "0,1,0,1,0,1,0\n" +
-								 "0,1,1,1,1,1,0\n" +
-								 "0,0,0,0,0,0,0";
+			var roadMap:String = Debug.defaultMap;
 
 			// The collision map is defined by the read map
 			var collisionMap:String = roadMap.split("0").join("a");
@@ -66,14 +58,14 @@ package states
 
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
-			_backgroundTilemap.loadMap(roadMap, Assets.ROAD_TILESET, 128, 128, FlxTilemap.AUTO, 0, 1, 2);
+			_backgroundTilemap.loadMap(roadMap, Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
 
 			// Collision tilemap
 			_collideMap = new FlxTilemap();
-			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, 128, 128);
+			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 
 			// The player
-			_player = new FlxSprite(140, 140);
+			_player = new FlxSprite(2.5 * Config.tileSize, 3.5 * Config.tileSize);
 			_player.makeGraphic(20, 20);
 
 			_cop = new Cop(_collideMap, _player);
@@ -155,7 +147,7 @@ package states
 
 			viewRoutine();
 			
-			var speed:int = 2;
+			var speed:int = Config.playerWalkSpeed;
 			if (_inputController.up) {
 				_player.y -= speed;
 			}
@@ -186,18 +178,12 @@ package states
 		}
 			
 		private function manageBuildingRoof(player:FlxBasic, roof:FlxBasic) : void {
-			
 			var building:FlxSprite = roof as FlxSprite;
 			if (building != null)
 			{
-				building.alpha = 0.5;
+				building.alpha = Config.buildingAlpha;
 			}
 		}
 		
-		public override function draw() : void {
-			super.draw();
-
-			_cop.draw();
-		}
 	}
 }

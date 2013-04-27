@@ -20,29 +20,27 @@ package sets
 		public function set alpha(value:Number) : void { _roof.alpha = value; };
 		
 		public function Building(x:int, y:int, basementGroup:FlxGroup, roofGroup:FlxGroup, sprite:Class) {
-			const tileSize:int = 128;
-			
 			var tempSprite:FlxSprite = new FlxSprite(0, 0, sprite);
 			
 			// Manage the basement
 			_basement = new FlxSprite();
-			_basement.makeGraphic(tileSize, tileSize);
-			_basement.x = x * tileSize;
-			_basement.y = y * tileSize;
+			_basement.makeGraphic(Config.tileSize, Config.tileSize);
+			_basement.x = x * Config.tileSize;
+			_basement.y = y * Config.tileSize;
 			
-			var data:BitmapData = new BitmapData(tileSize, tileSize);
-			data.copyPixels(tempSprite.pixels, new Rectangle(0, tempSprite.height - tileSize, tileSize, tileSize), new Point());
+			var data:BitmapData = new BitmapData(Config.tileSize, Config.tileSize);
+			data.copyPixels(tempSprite.pixels, new Rectangle(0, tempSprite.height - Config.tileSize, Config.tileSize, Config.tileSize), new Point());
 			_basement.pixels = data;
 		
 			// Manage the roof
 			_roof = new FlxSprite();
-			_roof.makeGraphic(tileSize, tempSprite.height - tileSize);
-			_roof.x = x * tileSize;
-			_roof.y = y * tileSize - tileSize * 2;
-			_roof.alpha = 0.5;
+			_roof.makeGraphic(Config.tileSize, tempSprite.height - Config.tileSize);
+			_roof.x = x * Config.tileSize;
+			_roof.y = y * Config.tileSize - Config.tileSize * 2;
+			_roof.alpha = Config.buildingAlpha;
 			
-			data = new BitmapData(tileSize, _roof.height);
-			data.copyPixels(tempSprite.pixels, new Rectangle(0, 0, tileSize, _roof.height), new Point());
+			data = new BitmapData(Config.tileSize, _roof.height);
+			data.copyPixels(tempSprite.pixels, new Rectangle(0, 0, Config.tileSize, _roof.height), new Point());
 			_roof.pixels = data;
 			
 			// The ground
