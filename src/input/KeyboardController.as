@@ -16,8 +16,8 @@ package input
 			_right = FlxG.keys.pressed("RIGHT") || FlxG.keys.pressed("D");
 			_up = FlxG.keys.pressed("UP") || FlxG.keys.pressed("W") || FlxG.keys.pressed("Z");
 			_down = FlxG.keys.pressed("DOWN") || FlxG.keys.pressed("S");
-			_actionA = FlxG.keys.pressed("A");
-			_actionB = FlxG.keys.pressed("B");
+			_actionA = FlxG.keys.justPressed("SPACE");
+			_actionB = FlxG.keys.justPressed("CONTROL");
 		}
 	}
 

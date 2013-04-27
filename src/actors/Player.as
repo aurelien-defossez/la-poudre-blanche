@@ -5,16 +5,33 @@ package actors {
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
+	import states.PlayState;
 
 	public class Player extends FlxSprite {
 		
 		private var _collideMap:FlxTilemap;
 		private var _inputController:Controller;
 		private var _tileIndex:Object;
+		private var _state:PlayState;
 		
-		public function Player(collideMap:FlxTilemap, inputController:Controller, i:Number, j:Number) {
+		private var _drugCounter:int
+		
+		private var _runTimer:Number;
+		/** Each drug consumption increase this counter : use it to make crazy things */
+		private var _intoxication:int;
+		
+		public function get drugCounter() : int { return _drugCounter; };
+		public function set drugCounter(value:int) : void { _drugCounter = value; };
+		
+		public function get runTimer() : Number { return _runTimer; };
+		
+		public function Player(collideMap:FlxTilemap, inputController:Controller, state:PlayState, i:Number, j:Number) {
 			super(j * Config.tileSize, i * Config.tileSize);
 			
+			_state = state;
+			_drugCounter = Config.baseDrugCounter;
+			_intoxication = 0;
+			_runTimer = 0;
 			_collideMap = collideMap;
 			_inputController = inputController;
 			
@@ -23,7 +40,15 @@ package actors {
 
 		public override function update() : void {
 			// Update position
-			var speed:int = Config.playerWalkSpeed;
+			var speed:int = 0;
+			if (_runTimer > 0) {
+				_runTimer -= FlxG.elapsed;
+				speed = Config.playerRunSpeed;
+			} else {
+				_runTimer = 0;
+				speed = Config.playerWalkSpeed;
+			}
+			
 			if (_inputController.up) {
 				y -= speed;
 			} else if (_inputController.down) {
@@ -36,6 +61,21 @@ package actors {
 				x += speed;
 			}
 
+			if (_drugCounter > 0) {
+				// Speed shoot
+				if (_inputController.actionA) {
+					_drugCounter--;
+					_runTimer += Config.runTime;
+				}
+				
+				// Ninja powder
+				if (_inputController.actionB)
+				{
+					_drugCounter--;
+					_state.dropBomb(x, y);
+				}
+			}
+			
 			// Check for collision with buildings
 			FlxG.collide(_collideMap, this);
 			

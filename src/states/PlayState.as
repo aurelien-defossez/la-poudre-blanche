@@ -1,13 +1,18 @@
 package states
 {
 	import actors.Player;
+	import actors.Ponycorn;
+	import flash.text.CSMSettings;
 	import input.KeyboardController;
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
+	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
+	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
+	import org.flixel.FlxU;
 	import sets.Building;
 
 	import actors.Cop;
@@ -31,6 +36,7 @@ package states
 		private var _player:Player;
 		/** The cop */
 		private var _cop:Cop;
+		private var _cops:FlxGroup;
 		/** All actors are stored in this group, player included */
 		private var _actors:FlxGroup;
 		
@@ -40,11 +46,12 @@ package states
 		
 		/** The input controller */
 		private var _inputController:KeyboardController;
-
+		
 		public function PlayState() {
 		}
 
 		public override function create() : void {
+			
 			// The input controller
 			_inputController = new KeyboardController();
 
@@ -65,7 +72,7 @@ package states
 			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 
 			// The player
-			_player = new Player(_collideMap, _inputController, 2.5, 3.5);
+			_player = new Player(_collideMap, _inputController, this, 2.5, 3.5);
 			
 			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
@@ -112,9 +119,13 @@ package states
 				}
 			}
 			
+			_cops = new FlxGroup();
+			_cops.add(_cop);
+			
 			_actors = new FlxGroup();
 			_actors.add(_player);
-			_actors.add(_cop);
+			_actors.add(_cops);
+			
 			
 			// Add elements to the states
 			// The input controller first
@@ -129,6 +140,9 @@ package states
 
 			// And the buildings roofs
 			add(_buildingRoofs);
+			
+			// HUD
+			add(new Hud(_player));
 		}
 
 		public override function update() : void {
@@ -210,5 +224,23 @@ package states
 			}
 		}
 		
+		public function dropBomb(x:int, y:int) : void {
+			// The bomb is dropped at the given location
+			
+			
+			// Spawn the ponycorn
+			_actors.add(new Ponycorn(x, y));
+			 
+			// Check for nearby cops
+			for (var i:int = 0; i < _cops.length; i++) {
+				var cop:Cop = _cops.members[i];
+				
+				var distance:Number = FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(cop.x, cop.y));
+				if (distance < Config.ninjaBombRadius) {
+					// The cop is hit by the bomb
+					cop.takeBomb();
+				}
+			}
+		}
 	}
 }

@@ -14,38 +14,52 @@ package actors {
 		private var copPath:FlxPath;
 		private var lastPathUpdate:Number = 2;
 
+		private var _bombTimer:Number;
+		
 		public function Cop(collideMap:FlxTilemap, player:Player) {
 			_collideMap = collideMap;
 			_player = player
 			super(4.5 * Config.tileSize, 3.5 * Config.tileSize);
 			makeGraphic(20, 20);
+			_bombTimer = 0;
 		}
 
 		public override function update() : void {
-			// prepare cop start and end position
-			var pathStart:FlxPoint = getCenter();
-			var pathEnd:FlxPoint = _player.getCenter();
-
-			lastPathUpdate = lastPathUpdate + FlxG.elapsed;
-
-			if (lastPathUpdate > Config.copPathFindingPeriod && canSeePlayer(pathStart, pathEnd)) {
-				lastPathUpdate -= Config.copPathFindingPeriod;
-				copPath = _collideMap.findPath(pathStart, pathEnd);
-				if (copPath) {
-					followPath(copPath);
-				}
-			}
-
-			// Stop cop when end of path is reached
-			if (pathSpeed == 0) {
+			if (_bombTimer > 0) {
+				// Bombed : do crazy stuff or nothing
+				_bombTimer -= FlxG.elapsed;
+				
 				if (copPath) {
 					copPath = null;
 					stopFollowingPath(true);
 				}
 				velocity.x = 0;
 				velocity.y = 0;
-			}
+			} else {
+				// prepare cop start and end position
+				var pathStart:FlxPoint = getCenter();
+				var pathEnd:FlxPoint = _player.getCenter();
 
+				lastPathUpdate = lastPathUpdate + FlxG.elapsed;
+
+				if (lastPathUpdate > Config.copPathFindingPeriod && canSeePlayer(pathStart, pathEnd)) {
+					lastPathUpdate -= Config.copPathFindingPeriod;
+					copPath = _collideMap.findPath(pathStart, pathEnd);
+					if (copPath) {
+						followPath(copPath);
+					}
+				}
+
+				// Stop cop when end of path is reached
+				if (pathSpeed == 0) {
+					if (copPath) {
+						copPath = null;
+						stopFollowingPath(true);
+					}
+					velocity.x = 0;
+					velocity.y = 0;
+				}
+			}
 			super.update();
 		}
 
@@ -66,6 +80,14 @@ package actors {
 
 		public function canSeePlayer(start:FlxPoint, end:FlxPoint) : Boolean {
 			return _collideMap.ray(start, end);
+		}
+		
+		public function takeBomb() : void {
+			_bombTimer = Config.ninjaBombTime;
+			
+			// Stop previous movement
+			velocity.x = 0;
+			velocity.y = 0;
 		}
 	}
 }
