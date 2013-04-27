@@ -1,5 +1,6 @@
 package states
 {
+	import actors.Player;
 	import input.KeyboardController;
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxG;
@@ -27,7 +28,7 @@ package states
 		private var _buildingBasements:FlxGroup;
 
 		/** The player */
-		private var _player:FlxSprite;
+		private var _player:Player;
 		/** The cop */
 		private var _cop:Cop;
 		/** All actors are stored in this group, player included */
@@ -64,9 +65,9 @@ package states
 			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 
 			// The player
-			_player = new FlxSprite(2.5 * Config.tileSize, 3.5 * Config.tileSize);
-			_player.makeGraphic(20, 20);
-
+			_player = new Player(_collideMap, _inputController, 2.5, 3.5);
+			
+			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
 
 			// Make the camera follow the player
@@ -130,69 +131,50 @@ package states
 			add(_buildingRoofs);
 		}
 
-		public override function update() : void{
+		public override function update() : void {
 			super.update();
 
-			viewRoutine();
-			
-			var speed:int = Config.playerWalkSpeed;
-			if (_inputController.up) {
-				_player.y -= speed;
-			}
-			else if (_inputController.down) {
-				_player.y += speed;
-			}
-
-			if (_inputController.left) {
-				_player.x -= speed;
-			}
-			else if (_inputController.right) {
-				_player.x += speed;
-			}
-
-			FlxG.collide(_collideMap, _player);
-		}
-		
-		private function viewRoutine() : void {
 			var i:int;
 			var j:int;
 			
-			// Reset buildings alpha
-			for (i = 0; i < _buildings.length; i++) {
-				_buildings.members[i].alpha = 1;
-			}
-			
 			// Compute player position (in tiles)
-			var playerPosition:Object = Utils.getTile(_player.x, _player.y);
-			
-			// Fade tiles to the left (and the current tile)
-			i = playerPosition.i;
-			j = playerPosition.j;
-			while(getBuilding(i, j) == null) {
-				fadeTile(i, j);
-				--j;
-			}
-			
-			// Fade tiles to the right
-			j = playerPosition.j + 1;
-			while(getBuilding(i, j) == null) {
-				fadeTile(i, j);
-				++j;
-			}
-			
-			// Fade tiles to the top
-			i = playerPosition.i - 1;
-			j = playerPosition.j;
-			while(getBuilding(i, j) == null) {
-				fadeTile(i, j);
-				--i;
-			}
-			
-			// Fade tiles to the bottom
-			i = playerPosition.i + 1;
-			while(getBuilding(i, j) == null) {
-				fadeTile(i, j);
-				++i;
+			if (_player.changedTile()) {
+				// Reset buildings alpha
+				for (i = 0; i < _buildings.length; i++) {
+					_buildings.members[i].alpha = 1;
+				}
+				
+				var playerPosition:Object = _player.getTileIndex();
+				
+				// Fade tiles to the left (and the current tile)
+				i = playerPosition.i;
+				j = playerPosition.j;
+				while(getBuilding(i, j) == null) {
+					fadeTile(i, j);
+					--j;
+				}
+				
+				// Fade tiles to the right
+				j = playerPosition.j + 1;
+				while(getBuilding(i, j) == null) {
+					fadeTile(i, j);
+					++j;
+				}
+				
+				// Fade tiles to the top
+				i = playerPosition.i - 1;
+				j = playerPosition.j;
+				while(getBuilding(i, j) == null) {
+					fadeTile(i, j);
+					--i;
+				}
+				
+				// Fade tiles to the bottom
+				i = playerPosition.i + 1;
+				while(getBuilding(i, j) == null) {
+					fadeTile(i, j);
+					++i;
+				}
 			}
 		}
 		

@@ -9,12 +9,12 @@ package actors {
 	public class Cop extends FlxSprite {
 
 		private var _collideMap:FlxTilemap;
-		private var _player:FlxSprite;
+		private var _player:Player;
 
 		private var copPath:FlxPath;
 		private var lastPathUpdate:Number = 2;
 
-		public function Cop(collideMap:FlxTilemap, player:FlxSprite) {
+		public function Cop(collideMap:FlxTilemap, player:Player) {
 			_collideMap = collideMap;
 			_player = player
 			super(4.5 * Config.tileSize, 3.5 * Config.tileSize);
@@ -23,14 +23,8 @@ package actors {
 
 		public override function update() : void {
 			// prepare cop start and end position
-			var pathStart:FlxPoint = new FlxPoint(
-				x + width / 2,
-				y + height / 2
-			);
-			var pathEnd:FlxPoint = new FlxPoint(
-				_player.x + _player.width / 2,
-				_player.y + _player.height / 2
-			);
+			var pathStart:FlxPoint = getCenter();
+			var pathEnd:FlxPoint = _player.getCenter();
 
 			lastPathUpdate = lastPathUpdate + FlxG.elapsed;
 
@@ -62,6 +56,13 @@ package actors {
                 copPath.drawDebug();
             }
         }
+		
+		public function getCenter() : FlxPoint {
+			return new FlxPoint(
+				x + width / 2,
+				y + height / 2
+			);
+		}
 
 		public function canSeePlayer(start:FlxPoint, end:FlxPoint) : Boolean {
 			return _collideMap.ray(start, end);
