@@ -65,7 +65,7 @@ package states
 			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, 128, 128);
 
 			// The player
-			_player = new FlxSprite(FlxG.width / 2 - 10, FlxG.height / 2 - 10);
+			_player = new FlxSprite(140, 140);
 			_player.makeGraphic(20, 20);
 
 			_cop = new Cop(_collideMap, _player);
@@ -77,7 +77,7 @@ package states
 			// Create the buildings
 			_buildingBasements = new FlxGroup();
 			_buildingRoofs = new FlxGroup();
-			
+
 			var data:Array = collisionMap.split(",");
 			var mapWidth:int = _collideMap.width;
 			for (var i:uint = 0; i < data.length; i++) {
@@ -86,19 +86,19 @@ package states
 
 			_actors = new FlxGroup();
 			_actors.add(_player);
-			//_actors.add(_cop);
-			
+			_actors.add(_cop);
+
 			// Add elements to the states
 			// The input controller first
 			add(_inputController);
-			
+
 			// The background part
 			add(_backgroundTilemap);
 			add(_collideMap);
-			
+
 			// The actors (player, cops, unicorns...)
 			add(_actors);
-			
+
 			// And the buildings roofs
 			add(_buildingRoofs);
 		}
