@@ -6,6 +6,7 @@ package states
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxTilemap;
+	import sets.Building;
 
 	import actors.Cop;
 
@@ -78,12 +79,49 @@ package states
 			_buildingBasements = new FlxGroup();
 			_buildingRoofs = new FlxGroup();
 			
+			// Ease the use of map data
+			var mapData:Array = new Array();
+			var rows:Array = collisionMap.split("\n");
+			for (var row:int = 0; row < rows.length; row++) {
+				mapData[row] = rows[row].split(",");
+			}
+			
+			var randomMachine:RandomMachine = new RandomMachine(Math.random() * 5000000);
+			var buildingSprites:Vector.<Class> = new Vector.<Class>();
+			buildingSprites.push(Assets.BUILDING_1);
+			buildingSprites.push(Assets.BUILDING_2);
+			buildingSprites.push(Assets.HOUSE_1);
+			//buildingSprites.push(Assets.HOUSE_LEFT);
+			buildingSprites.push(Assets.HOUSE_MIDDLE);
+			//buildingSprites.push(Assets.HOUSE_RIGHT);
+			buildingSprites.push(Assets.GARDEN);
+			buildingSprites.push(Assets.SKYLINE_GREEN);
+			buildingSprites.push(Assets.SKYLINE_PURPLE);
+			
+			for (row = 0; row < mapData.length; row++ ) {
+				for (var col:int = 0; col < mapData[row].length; col++ ) {
+					if (mapData[row][col] == 1) {
+						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
+						var building:Building = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
+					}
+				}
+			}
+			
+			/*
 			var data:Array = collisionMap.split(",");
 			var mapWidth:int = _collideMap.width;
+			var hTileCount:int = mapWidth / 128;
+			trace(hTileCount);
 			for (var i:uint = 0; i < data.length; i++) {
-
+				//if (data[i] == 1) {
+					var x:int = i % hTileCount;
+					var y:int = Math.floor(i / hTileCount);
+					trace(i + " - " + x + "," + y);
+					var building:Building = new Building(x, y, _buildingBasements, _buildingRoofs, Assets.BUILDING_1);
+					// TODO manage buildings
+				//}
 			}
-
+			*/
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			//_actors.add(_cop);
@@ -95,6 +133,7 @@ package states
 			// The background part
 			add(_backgroundTilemap);
 			add(_collideMap);
+			add(_buildingBasements);
 			
 			// The actors (player, cops, unicorns...)
 			add(_actors);
@@ -106,6 +145,8 @@ package states
 		public override function update() : void{
 			super.update();
 
+			viewRoutine();
+			
 			var speed:int = 2;
 			if (_inputController.up) {
 				_player.y -= speed;
@@ -122,6 +163,10 @@ package states
 			}
 
 			FlxG.collide(_collideMap, _player);
+		}
+		
+		private function viewRoutine() : void {
+			
 		}
 	}
 }
