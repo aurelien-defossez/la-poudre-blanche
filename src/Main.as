@@ -4,6 +4,7 @@ package
 	import flash.events.Event;
 	import org.flixel.FlxGame;
 	import states.MenuState;
+	import states.PlayState;
 	
 	/**
 	 * ...
@@ -14,7 +15,7 @@ package
 		
 		public function Main() : void
 		{
-			super(800, 600, MenuState, 1);
+			super(800, 600, PlayState, 1);
 		}
 	}
 	
