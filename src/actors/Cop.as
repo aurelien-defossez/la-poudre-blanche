@@ -12,6 +12,7 @@ package actors {
 
 		private var _collideMap:FlxTilemap;
 		private var _player:Player;
+		private var _currentAnimation:String;
 
 		private var copPath:FlxPath;
 		private var lastPathUpdate:Number = 2;
@@ -83,13 +84,13 @@ package actors {
 			if (pathAngle > 45 && pathAngle <= 135) {
 				play("walk-east");
 			}
-			else if (pathAngle > 135 && pathAngle <= 225) {
+			else if (pathAngle > 135 || pathAngle <= -135) {
 				play("walk-south");
 			}
-			else if (pathAngle > 225 && pathAngle <= 315) {
+			else if (pathAngle < -35 && pathAngle > -135) {
 				play("walk-west");
 			}
-			else if (pathAngle > 315 || pathAngle <= 45) {
+			else if (pathAngle > -45 || pathAngle <= 45) {
 				play("walk-north");
 			}
 
@@ -103,6 +104,14 @@ package actors {
                 copPath.drawDebug();
             }
         }
+		
+		public override function play(animation:String, force:Boolean = false) : void {
+			if (force || animation == _currentAnimation) {
+				super.play(animation, force);
+			}
+			
+			_currentAnimation = animation;
+		}
 
 		public function getCenter() : FlxPoint {
 			return new FlxPoint(

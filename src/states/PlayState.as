@@ -70,7 +70,7 @@ package states
 			_collideMap.loadMap(_map.getCollisionMap(), Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 
 			// The player
-			_player = new Player(_collideMap, _inputController, this, 2.5, 3.5);
+			_player = new Player(_collideMap, _inputController, this, 1.5, 3.5);
 			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
 
