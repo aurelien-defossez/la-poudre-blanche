@@ -12,10 +12,12 @@ package sets
 	 * ...
 	 * @author Alex Frêne
 	 */
-	public class Building extends FlxBasic {
+	public class Building extends FlxGroup {
 		
 		private var _basement:FlxSprite;
 		private var _roof:FlxSprite;
+		
+		public function set alpha(value:Number) : void { _roof.alpha = value; };
 		
 		public function Building(x:int, y:int, basementGroup:FlxGroup, roofGroup:FlxGroup, sprite:Class) {
 			const tileSize:int = 128;
@@ -49,6 +51,9 @@ package sets
 			basementGroup.add(ground);
 			basementGroup.add(_basement);
 			roofGroup.add(_roof);
+			
+			// Add the roof to the group to test collision with player (line of sight)
+			add(_roof);
 		}
 		
 	}

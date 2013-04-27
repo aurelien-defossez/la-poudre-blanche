@@ -8,14 +8,6 @@ package input
 	 * @author Alex Frêne
 	 */
 	public class Controller extends FlxBasic {
-		// Key definitions
-		protected var _leftKey:String;
-		protected var _rightKey:String;
-		protected var _upKey:String;
-		protected var _downKey:String;
-		protected var _actionAKey:String;
-		protected var _actionBKey:String;
-		
 		// Input values
 		protected var _left:Boolean;
 		protected var _right:Boolean;
@@ -39,15 +31,6 @@ package input
 			_down = false;
 			_actionA = false;
 			_actionB = false;
-		}
-		
-		public override function update() : void {
-			_left = FlxG.keys.pressed(_leftKey);
-			_right = FlxG.keys.pressed(_rightKey);
-			_up = FlxG.keys.pressed(_upKey);
-			_down = FlxG.keys.pressed(_downKey);
-			_actionA = FlxG.keys.pressed(_actionAKey);
-			_actionB = FlxG.keys.pressed(_actionBKey);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package states
 {
 	import input.KeyboardController;
+	import org.flixel.FlxBasic;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxSprite;
@@ -30,6 +31,8 @@ package states
 		private var _cop:Cop;
 		/** All actors are stored in this group, player included */
 		private var _actors:FlxGroup;
+		
+		private var _buildings:FlxGroup;
 
 		/** The input controller */
 		private var _inputController:KeyboardController;
@@ -66,7 +69,7 @@ package states
 			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, 128, 128);
 
 			// The player
-			_player = new FlxSprite(FlxG.width / 2 - 10, FlxG.height / 2 - 10);
+			_player = new FlxSprite(140, 140);
 			_player.makeGraphic(20, 20);
 
 			_cop = new Cop(_collideMap, _player);
@@ -86,7 +89,7 @@ package states
 				mapData[row] = rows[row].split(",");
 			}
 			
-			var randomMachine:RandomMachine = new RandomMachine(Math.random() * 5000000);
+			var randomMachine:RandomMachine = new RandomMachine(0 /*Math.random() * 5000000*/);
 			var buildingSprites:Vector.<Class> = new Vector.<Class>();
 			buildingSprites.push(Assets.BUILDING_1);
 			buildingSprites.push(Assets.BUILDING_2);
@@ -98,46 +101,32 @@ package states
 			buildingSprites.push(Assets.SKYLINE_GREEN);
 			buildingSprites.push(Assets.SKYLINE_PURPLE);
 			
+			_buildings = new FlxGroup();
 			for (row = 0; row < mapData.length; row++ ) {
 				for (var col:int = 0; col < mapData[row].length; col++ ) {
 					if (mapData[row][col] == 1) {
 						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
 						var building:Building = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
+						_buildings.add(building);
 					}
 				}
 			}
 			
-			/*
-			var data:Array = collisionMap.split(",");
-			var mapWidth:int = _collideMap.width;
-			var hTileCount:int = mapWidth / 128;
-			trace(hTileCount);
-			for (var i:uint = 0; i < data.length; i++) {
-				//if (data[i] == 1) {
-					var x:int = i % hTileCount;
-					var y:int = Math.floor(i / hTileCount);
-					trace(i + " - " + x + "," + y);
-					var building:Building = new Building(x, y, _buildingBasements, _buildingRoofs, Assets.BUILDING_1);
-					// TODO manage buildings
-				//}
-			}
-			*/
 			_actors = new FlxGroup();
 			_actors.add(_player);
-			//_actors.add(_cop);
-			
+			_actors.add(_cop);
+
 			// Add elements to the states
 			// The input controller first
 			add(_inputController);
-			
+
 			// The background part
 			add(_backgroundTilemap);
 			add(_collideMap);
 			add(_buildingBasements);
-			
 			// The actors (player, cops, unicorns...)
 			add(_actors);
-			
+
 			// And the buildings roofs
 			add(_buildingRoofs);
 		}
@@ -166,7 +155,23 @@ package states
 		}
 		
 		private function viewRoutine() : void {
+			for (var i:int = 0; i < _buildings.length; i++) _buildings.members[i].alpha = 1;
 			
+			FlxG.overlap(_player, _buildings, manageBuildingRoof);
+		}
+			
+		private function manageBuildingRoof(player:FlxBasic, roof:FlxBasic) : void {
+			var building:Building = roof as Building;
+			if (building != null)
+			{
+				building.alpha = 0.5;
+			}
+		}
+		
+		public override function draw() : void {
+			super.draw();
+
+			_cop.draw();
 		}
 	}
 }
