@@ -122,9 +122,6 @@ package actors {
 				}
 			}
 			
-			// Check for collision with buildings
-			FlxG.collide(_collideMap, this);
-
 			if (moveThisFrame) {
 				x = x + direction.x * speed;
 				y = y + direction.y * speed;
@@ -159,6 +156,9 @@ package actors {
 					frame = TOTAL_FRAMES * DIRECTIONS["south"] + STANDING_FRAME;
 				}
 			}
+
+			// Check for collision with buildings
+			FlxG.collide(_collideMap, this);
 
 			moveThisFrame = false;
 			super.update();
