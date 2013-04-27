@@ -1,4 +1,4 @@
-package  
+package
 {
 	/**
 	 * ...
@@ -12,7 +12,7 @@ package
 		[Embed(source = "/gfx/roads.png")] public static const ROAD_TILESET:Class;
 		[Embed(source = "/gfx/ponycorn.png")] public static const PONYCORN:Class;
 		
-		// Buildings 
+		// Buildings
 		[Embed(source = "/gfx/buildings/sol.png")] public static const GROUND:Class;
 		[Embed(source = "/gfx/buildings/immeuble_gd.png")] public static const BUILDING_1:Class;
 		[Embed(source = "/gfx/buildings/immeuble_pt.png")] public static const BUILDING_2:Class;
@@ -23,6 +23,8 @@ package
 		[Embed(source = "/gfx/buildings/parc.png")] public static const GARDEN:Class;
 		[Embed(source = "/gfx/buildings/tour_vert.png")] public static const SKYLINE_GREEN:Class;
 		[Embed(source = "/gfx/buildings/tour_violet.png")] public static const SKYLINE_PURPLE:Class;
-	}
 
+		// Actors
+		[Embed(source = "/gfx/heenok.png")] public static const HEENOK_TILESET:Class;
+	}
 }

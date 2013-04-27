@@ -4,6 +4,7 @@ package states
 	import actors.Ponycorn;
 	import flash.text.CSMSettings;
 	import input.KeyboardController;
+	import maps.Map;
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
@@ -16,6 +17,7 @@ package states
 	import sets.Building;
 
 	import actors.Cop;
+	import actors.Player;
 
 	/**
 	 * ...
@@ -26,7 +28,8 @@ package states
 		private var _backgroundTilemap:FlxTilemap;
 		/** The collision tilemap (building basements) */
 		private var _collideMap:FlxTilemap;
-		private var _mapData:Array;
+		private var _map:Map;
+
 		/** The building roofs */
 		private var _buildingRoofs:FlxGroup;
 		/** The building basements */
@@ -39,11 +42,11 @@ package states
 		private var _cops:FlxGroup;
 		/** All actors are stored in this group, player included */
 		private var _actors:FlxGroup;
-		
+
 		/** Buildings*/
 		private var _buildings:FlxGroup;
 		private var _buildingByCoordinate:Array;
-		
+
 		/** The input controller */
 		private var _inputController:KeyboardController;
 		
@@ -56,24 +59,18 @@ package states
 			_inputController = new KeyboardController();
 
 			// TODO Build this string map procedurally
-			var roadMap:String = Debug.defaultMap;
-
-			// The collision map is defined by the read map
-			var collisionMap:String = roadMap.split("0").join("a");
-			collisionMap = collisionMap.split("1").join("0");
-			collisionMap = collisionMap.split("a").join("1");
-
+			_map = new Map(11, 14);
+			
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
-			_backgroundTilemap.loadMap(roadMap, Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
+			_backgroundTilemap.loadMap(_map.getRoadMap(), Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
 
 			// Collision tilemap
 			_collideMap = new FlxTilemap();
-			_collideMap.loadMap(collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
+			_collideMap.loadMap(_map.getCollisionMap(), Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 
 			// The player
 			_player = new Player(_collideMap, _inputController, this, 2.5, 3.5);
-			
 			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
 
@@ -84,13 +81,6 @@ package states
 			// Create the buildings
 			_buildingBasements = new FlxGroup();
 			_buildingRoofs = new FlxGroup();
-			
-			// Ease the use of map data
-			_mapData = new Array();
-			var rows:Array = collisionMap.split("\n");
-			for (var row:int = 0; row < rows.length; row++) {
-				_mapData[row] = rows[row].split(",");
-			}
 			
 			var randomMachine:RandomMachine = new RandomMachine(0 /*Math.random() * 5000000*/);
 			var buildingSprites:Vector.<Class> = new Vector.<Class>();
@@ -103,14 +93,15 @@ package states
 			buildingSprites.push(Assets.GARDEN);
 			buildingSprites.push(Assets.SKYLINE_GREEN);
 			buildingSprites.push(Assets.SKYLINE_PURPLE);
-			
+
 			_buildings = new FlxGroup();
 			_buildingByCoordinate = new Array();
-			for (row = 0; row < _mapData.length; row++ ) {
+			
+			for (var row:int = 0; row < _map.nRows; row++ ) {
 				_buildingByCoordinate[row] = new Array();
 				
-				for (var col:int = 0; col < _mapData[row].length; col++ ) {
-					if (_mapData[row][col] == 1) {
+				for (var col:int = 0; col < _map.nCols; col++ ) {
+					if (_map.at(row, col) == 1) {
 						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
 						var building:Building = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
 						_buildings.add(building);
@@ -125,7 +116,6 @@ package states
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			_actors.add(_cops);
-			
 			
 			// Add elements to the states
 			// The input controller first
@@ -150,73 +140,73 @@ package states
 
 			var i:int;
 			var j:int;
-			
+
 			// Update buildings manually
 			for (i = 0; i < _buildings.length; i++) {
 				_buildings.members[i].update();
 			}
-			
+
 			// Compute player position (in tiles)
 			if (_player.changedTile()) {
 				// Reset buildings alpha
 				for (i = 0; i < _buildings.length; i++) {
 					_buildings.members[i].alpha = 1;
 				}
-				
+
 				var playerPosition:Object = _player.getTileIndex();
-				
+
 				// Fade tiles to the left (and the current tile)
 				i = playerPosition.i;
 				j = playerPosition.j;
-				while(getBuilding(i, j) == null) {
+				while(j > 0 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					--j;
 				}
-				
+
 				// Fade tiles to the right
 				j = playerPosition.j + 1;
-				while(getBuilding(i, j) == null) {
+				while(j < _map.nCols - 1 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					++j;
 				}
-				
+
 				// Fade tiles to the top
 				i = playerPosition.i - 1;
 				j = playerPosition.j;
-				while(getBuilding(i, j) == null) {
+				while(i > 0 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					--i;
 				}
-				
+
 				// Fade tiles to the bottom
 				i = playerPosition.i + 1;
-				while(getBuilding(i, j) == null) {
+				while (i < _map.nRows - 1 && getBuilding(i, j) == null) {
 					fadeTile(i, j);
 					++i;
 				}
 			}
 		}
-		
+
 		private function getBuilding(i:Number, j:Number) : Building {
 			var row:Array = _buildingByCoordinate[i];
-			
+
 			return (row) ? row[j] : null;
 		}
-		
+
 		private function fadeTile(i:Number, j:Number) : void {
 			// Fade building below the tile
 			var building:Building = getBuilding(i + 1, j);
 			if (building != null) {
 				building.alpha = Config.buildingAlpha;
 			}
-			
+
 			// Fade building really below the tile
 			building = getBuilding(i + 2, j);
 			if (building != null) {
 				building.alpha = Config.buildingAlpha;
 			}
 		}
-			
+
 		private function manageBuildingRoof(player:FlxBasic, roof:FlxBasic) : void {
 			var building:FlxSprite = roof as FlxSprite;
 			if (building != null) {
