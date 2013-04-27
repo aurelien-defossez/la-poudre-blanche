@@ -40,21 +40,21 @@ package maps
 			
 			// Create intersections
 			for (i = 2;  i < nRows - 2; i += 2) {
-				var intersections:int = Math.round(Math.random() * nCols / 2);
+				var intersections:int = Math.round(2 + Math.random() * nCols / 6);
 				
 				for (k = 0; k < intersections; k++) {
-					_map[i][3 + Math.floor(Math.random() * nCols - 6)] = 0;
+					_map[i][3 + Math.floor(Math.random() * (nCols - 6))] = 0;
 				}
 			}
 			
-			// Create main streer buildings
-			for (i = 1;  i < nRows - 2; i += 2) {
-				var buildings:int = Math.round(Math.random() * nCols / 5);
+			// Create main street buildings
+			/*for (i = 1;  i < nRows - 2; i += 2) {
+				var buildings:int = Math.round(Math.random() * nCols / 6);
 				
 				for (k = 0; k < buildings; k++) {
 					_map[i][1 + Math.floor(Math.random() * nCols - 2)] = 1;
 				}
-			}
+			}*/
 		}
 		
 		public function at(i:int, j:int) : int {

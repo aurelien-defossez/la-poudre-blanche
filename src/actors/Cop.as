@@ -17,7 +17,7 @@ package actors {
 		public function Cop(collideMap:FlxTilemap, player:Player) {
 			_collideMap = collideMap;
 			_player = player
-			super(4.5 * Config.tileSize, 3.5 * Config.tileSize);
+			super(1.5 * Config.tileSize, 1.5 * Config.tileSize);
 			makeGraphic(20, 20);
 		}
 
