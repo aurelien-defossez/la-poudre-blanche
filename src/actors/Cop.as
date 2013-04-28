@@ -22,10 +22,10 @@ package actors {
 		private var _currentDirection:uint;
 
 		public function get currentDirection() : uint { return _currentDirection; };
-		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
 		public function Cop(collideMap:FlxTilemap, player:Player) {
 			_player = player
+			_collideMap = collideMap;
 
 			super(1.5 * Config.tileSize, 1.5 * Config.tileSize);
 			_bombTimer = 0;

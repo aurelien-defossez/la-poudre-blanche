@@ -66,7 +66,7 @@ package states
 			_player = new Player(_inputController, this);
 			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
-			
+
 			loadLevel(0);
 
 			// Create the buildings
@@ -109,9 +109,6 @@ package states
 				}
 			}
 			
-			_cops = new FlxGroup();
-			_cops.add(_cop);
-			
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			_actors.add(_cops);
@@ -150,9 +147,18 @@ package states
 			_player.x = (_map.player.y + 0.3) * Config.tileSize
 			_player.y = (_map.player.x + 0.25) * Config.tileSize
 			
+			// Create chickens
+			_cops = new FlxGroup();
+			for (var i:Number = 0; i < _map.cops.length; i++) {
+				var cop:Cop = new Cop(_collideMap, _player);
+				cop.x = (_map.cops[i].y + 0.3) * Config.tileSize
+				cop.y = (_map.cops[i].x + 0.25) * Config.tileSize
+				trace("Create cop at " + cop.x + " ; " + cop.y);
+				_cops.add(cop);
+			}
+			
 			// Apply maps
 			_player.collideMap = _collideMap;
-			_cop.collideMap = _collideMap;
 			
 			// Play music
 			_bass = FlxG.loadSound(Assets.MUSIC_BASS, 0, true, false, true);
