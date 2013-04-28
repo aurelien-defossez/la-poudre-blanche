@@ -17,7 +17,26 @@ package maps
 		public function get collisionMap() : String { return _collisionMap; };
 		public function get roadMap() : String { return _roadMap; };
 		
-		public function Map(nRows:int, nCols:int) {
+		public function Map();
+		
+		public function load(roadMap:String) {
+			_map = new Array();
+			_roadMap = roadMap;
+			
+			var rows:Array = roadMap.split("\n");
+			_nRows = rows.length;
+			for (var i:int = 0; i < nRows; i++) {
+				_map[i] = rows[i].split(",");
+				
+				for (var j:int = 0; j < nRows; j++) {
+					_map[i][j] = (_map[i][j] == 0) ? 1 : 0;
+				}
+			}
+			
+			computeCollisionMap();
+		}
+		
+		public function generate(nRows:int, nCols:int) {
 			_map = new Array();
 			_nRows = nRows;
 			_nCols = nCols;
