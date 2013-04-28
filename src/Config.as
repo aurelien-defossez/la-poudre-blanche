@@ -17,7 +17,8 @@ package
 		public static const ninjaPrice:int = 10;
 
 		// Cops
-		public static const copPathFindingPeriod:Number = 0.5;
+		public static const copPathFindingPeriod:Number = 0.5; // in seconds
+		public static const copMinSquaredDistanceToPlayerToDetect:Number = 500 * 500; // in pixels * pixels
 		public static const copSoundRadius:Number = 130;
 
 		// Drug and powers
@@ -27,7 +28,7 @@ package
 		public static const ninjaBombIntox:Number = 2;
 		public static const ninjaBombRadius:Number = 140;
 		public static const ponycornAlphaSpeed:Number = 0.02;
-		
+
 		// Levels
 		public static const levels:Array = [ {
 			map:
@@ -57,6 +58,27 @@ package
 			]
 		}, {
 			map:
+				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
+				"0,0,0,0,0,0,1,1,1,0,1,1,1,0,0,0,1,0,0\n" +
+				"0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,0\n" +
+				"0,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0\n" +
+				"0,0,1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0\n" +
+				"0,0,1,0,1,1,1,0,1,1,1,0,1,0,1,0,0,1,0\n" +
+				"0,0,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0\n" +
+				"0,1,1,0,1,0,1,1,1,1,1,0,1,0,0,0,0,1,0\n" +
+				"0,0,1,0,1,0,1,0,0,0,1,0,1,1,1,0,1,1,0\n" +
+				"0,0,1,1,1,0,1,0,0,1,1,0,0,0,1,0,0,1,0\n" +
+				"0,0,1,0,0,0,1,0,1,1,1,0,1,1,0,0,1,1,0\n" +
+				"0,0,1,1,1,1,1,0,0,0,0,0,1,0,1,0,1,1,0\n" +
+				"0,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,1,0\n" +
+				"0,1,1,1,1,0,1,0,0,0,1,0,0,0,1,0,1,1,0\n" +
+				"0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0\n" +
+				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+			player: { x: 13, y: 6 },
+			target: { x: 9, y: 8 },
+			cops: []
+		}, {
+			map:
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
 				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
 				"0,0,0,0,0,1,0,0,0,0,1,0,0,0\n" +
@@ -69,7 +91,8 @@ package
 				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0",
 			player: { x: 1, y: 3 },
-			target: { x: 6, y: 11 }
+			target: { x: 6, y: 11 },
+			cops: []
 		}];
 	}
 

@@ -32,8 +32,8 @@ package maps
 			_mapData = new Array();
 			_roadMap = map.map;
 			_map.targetTile = {
-				x: _map.target.x,
-				y: _map.target.y + 1
+				x: _map.target.x + 1,
+				y: _map.target.y
 			};
 			
 			_soundSource = {

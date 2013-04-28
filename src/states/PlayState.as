@@ -28,6 +28,7 @@ package states
 	 * @author Alex Frêne
 	 */
 	public class PlayState extends FlxState {
+
 		/** The road background tilemap */
 		private var _backgroundTilemap:FlxTilemap;
 		/** The collision tilemap (building basements) */
@@ -55,14 +56,14 @@ package states
 
 		/** The input controller */
 		private var _inputController:KeyboardController;
-		
+
 		/** The sounds */
 		private var _bass:FlxSound;
 		private var _music:FlxSound;
 		private var _policeSound:FlxSound;
-		
+
 		private var _randomMachine:RandomMachine;
-		
+
 		public function PlayState() {
 		}
 
@@ -70,21 +71,18 @@ package states
 			FlxG.mouse.hide();
 			
 			_randomMachine = new RandomMachine(Math.random());
-			
+
 			// The input controller
 			_inputController = new KeyboardController();
 
 			// The player
 			_player = new Player(_inputController, this);
-			// The bad cop (or is it the good one?)
-			_cop = new Cop(_collideMap, _player);
 
 			loadLevel(0);
 
 			// Create the buildings
 			_buildingBasements = new FlxGroup();
 			_buildingRoofs = new FlxGroup();
-			
 			var buildingSprites:Vector.<Class> = new Vector.<Class>();
 			buildingSprites.push(Assets.BUILDING_1);
 			buildingSprites.push(Assets.BUILDING_2);
@@ -92,20 +90,20 @@ package states
 			buildingSprites.push(Assets.GARDEN);
 			buildingSprites.push(Assets.SKYLINE_GREEN);
 			buildingSprites.push(Assets.SKYLINE_PURPLE);
-			
+
 			//buildingSprites.push(Assets.HOUSE_LEFT);
 			buildingSprites.push(Assets.HOUSE_MIDDLE);
 			//buildingSprites.push(Assets.HOUSE_RIGHT);
 
 			_buildings = new Array();
-			
+
 			for (var row:int = 0; row < _map.nRows; row++ ) {
 				_buildings[row] = new Array();
-				
+
 				for (var col:int = 0; col < _map.nCols; col++ ) {
 					if (_map.at(row, col) == 1) {
 						var sprite:Class;
-						
+
 						// Disco club
 						if (row == _map.targetBuilding.x && col == _map.targetBuilding.y) {
 							sprite = Assets.NIGHT_CLUB;
@@ -118,13 +116,13 @@ package states
 					}
 				}
 			}
-			
+
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			_actors.add(_cops);
-			
+
 			_hallucinations = new FlxGroup();
-			
+
 			// Add elements to the states
 			// The input controller first
 			add(_inputController);
@@ -139,15 +137,15 @@ package states
 
 			// And the buildings roofs
 			add(_buildingRoofs);
-			
+
 			// HUD
 			add(new Hud(_player));
 		}
-		
+
 		public function loadLevel(mapId:int) : void {
 			_map = new Map();
 			_map.load(Config.levels[mapId]);
-			
+
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
 			_backgroundTilemap.loadMap(_map.roadMap, Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
@@ -155,23 +153,23 @@ package states
 			// Collision tilemap
 			_collideMap = new FlxTilemap();
 			_collideMap.loadMap(_map.collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
-			
+
 			// Move player
 			_player.x = (_map.player.y + 0.3) * Config.tileSize
 			_player.y = (_map.player.x + 0.25) * Config.tileSize
-			
+
 			// Create chickens
 			_cops = new FlxGroup();
 			for (var i:Number = 0; i < _map.cops.length; i++) {
-				var cop:Cop = new Cop(_collideMap, _player);
+				var cop:Cop = new Cop(_collideMap, _map, _player);
 				cop.x = (_map.cops[i].y + 0.3) * Config.tileSize;
 				cop.y = (_map.cops[i].x + 0.25) * Config.tileSize;
 				_cops.add(cop);
 			}
-			
+
 			// Apply maps
 			_player.collideMap = _collideMap;
-			
+
 			// Play music
 			_bass = FlxG.loadSound(Assets.MUSIC_BASS, 0, true, false, true);
 			_music = FlxG.loadSound(Assets.MUSIC_SUP, 0, true, false, true);
@@ -180,24 +178,24 @@ package states
 			// Make the camera follow the player
 			FlxG.camera.follow(_player);
 			_backgroundTilemap.follow();
-			
+
 			// Create the hallucination array
 			_spawnedHallucinations = new Array();
 			var j:int;
 			for (i = 0;  i < _map.nRows; i++) {
 				_spawnedHallucinations[i] = new Array();
-				
+
 				for (j = 0;  j < _map.nCols; j++) {
 					_spawnedHallucinations[i][j] = null;
 				}
 			}
-			
+
 		}
-		
+
 		public function stopLevel() : void {
 			_bass.stop();
 			_bass.destroy();
-			
+
 			_music.stop();
 			_music.destroy();
 		}
@@ -208,7 +206,7 @@ package states
 			var i:int;
 			var j:int;
 			var changedTile:Boolean = _player.changedTile();
-			
+
 			// Update music volume
 			var proximity:Number = Math.max(0, 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length));
 			_bass.volume = proximity;
@@ -231,6 +229,10 @@ package states
 
 			if (changedTile) {
 				var playerPosition:Object = _player.getTileIndex();
+				
+				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
+					trace("The end");
+				}
 
 				// Fade tiles to the left (and the current tile)
 				i = playerPosition.i;
@@ -262,10 +264,10 @@ package states
 					++i;
 				}
 			}
-			
+
 			// Only the player can collide with it's hallicinations
 			FlxG.collide(_player, _hallucinations);
-			
+
 			// Hallicination array update
 			var x:int;
 			var y:int = 0;
@@ -276,16 +278,16 @@ package states
 					}
 				}
 			}
-			
+
 			// Check for cops around the player
 			var minDistance:Number = Number.POSITIVE_INFINITY;
 			for (var c:int = 0; c < _cops.length; c++) {
 				var cop:Cop = _cops.members[c];
-				
+
 				var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
 				minDistance = Math.min(distance, minDistance);
 			}
-			trace(minDistance);
+			
 			if (minDistance < Config.copSoundRadius) {
 				_policeSound.volume = 1;
 			} else {
@@ -319,15 +321,15 @@ package states
 				building.alpha = Config.buildingAlpha;
 			}
 		}
-		
+
 		public function spawnHallucination() : void {
 			// Get a random road tile
 			var tx:int = -1;
 			var ty:int = -1;
-			
+
 			// Fill an array of possible spawn tiles
 			var possibleTiles:Vector.<FlxPoint> = new Vector.<FlxPoint>();
-			
+
 			var distance:int = 2;
 			var playerMidPoint:FlxPoint = _player.getMidpoint();
 			var tile:Object = Utils.getTile(playerMidPoint.x, playerMidPoint.y);
@@ -342,7 +344,7 @@ package states
 					}
 				}
 			}
-			
+
 			if(possibleTiles.length > 0 ) {
 				// Spawn a random hallucination
 				var randomTile:FlxPoint = possibleTiles[_randomMachine.nextMax(possibleTiles.length)];
@@ -350,38 +352,38 @@ package states
 				var x:int = randomTile.x * Config.tileSize;
 				var y:int = randomTile.y * Config.tileSize;
 				var hallucination:FlxSprite;
-				
+
 				if (_randomMachine.nextMinMax(0,100) > 50) {
 					hallucination = new ElephantHallucination(x, y);
 				} else {
 					hallucination = new GhostAnimation(x, y);
 				}
-				
+
 				_spawnedHallucinations[randomTile.y][randomTile.x] = hallucination;
 				_hallucinations.add(hallucination);
 			}
 		}
-		
+
 		public function dropBomb(x:int, y:int) : void {
 			// The bomb is dropped at the given location
-			
+
 			// Add the animation
 			_actors.add(new NinjaAnimation(x, y));
-			 
+
 			// Check for nearby cops
 			for (var i:int = 0; i < _cops.length; i++) {
 				var cop:Cop = _cops.members[i];
-				
+
 				var distance:Number = FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(cop.x, cop.y));
 				if (distance < Config.ninjaBombRadius) {
 					// The cop is hit by the bomb
 					cop.takeBomb();
-					
+
 					// The pony is placed according to the cop direction
 					var dir:uint = cop.currentDirection;
 					var x:int = cop.x;
 					var y:int = cop.y;
-					
+
 					var pony:Ponycorn = new Ponycorn(0, 0);
 					if (dir ==FlxObject.UP) {
 						// up
@@ -396,7 +398,7 @@ package states
 						// right
 						x = cop.x + cop.width;
 					}
-					
+
 					pony.x = x;
 					pony.y = y;
 					_actors.add(pony);

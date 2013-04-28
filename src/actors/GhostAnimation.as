@@ -9,9 +9,7 @@ package actors
 	 */
 	public class GhostAnimation extends Hallucination 
 	{
-		
-		public function GhostAnimation(x:int, y:int) 
-		{
+		public function GhostAnimation(x:Number, y:Number) {
 			super();
 			loadGraphic(Assets.GHOST_ANIMATION, true, false);
 			this.addAnimation("animation", [0, 1, 2, 1], 25);

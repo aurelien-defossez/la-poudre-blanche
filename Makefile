@@ -3,7 +3,7 @@ LIB_DIR=lib
 ASSETS_DIR=assets
 
 MAIN=$(SRC_DIR)/Main.as
-OUTPUT=la-poudre-blanche.swf
+OUTPUT=sniff.swf
 
 all:	build
 
@@ -12,3 +12,6 @@ build:
 
 run:	build
 	firefox $(OUTPUT)
+
+clear:
+	rm -f $(OUTPUT)
