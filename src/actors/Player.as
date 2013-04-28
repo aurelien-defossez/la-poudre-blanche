@@ -99,6 +99,7 @@ package actors {
 					_intoxication += Config.runIntox;
 					_drugCounter -= Config.runPrice;
 					_runTimer += Config.runTime;
+					_state.spawnHallucination();
 				}
 
 				// Ninja powder
@@ -107,6 +108,7 @@ package actors {
 					_intoxication += Config.ninjaBombIntox;
 					_drugCounter -= Config.ninjaPrice;
 					_state.dropBomb(x + width / 2, y + height / 2);
+					_state.spawnHallucination();
 				}
 			}
 
