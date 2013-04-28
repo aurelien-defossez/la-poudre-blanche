@@ -79,13 +79,11 @@ package states
 			buildingSprites.push(Assets.HOUSE_1);
 			buildingSprites.push(Assets.GARDEN);
 			buildingSprites.push(Assets.SKYLINE_GREEN);
+			buildingSprites.push(Assets.SKYLINE_PURPLE);
 			
 			//buildingSprites.push(Assets.HOUSE_LEFT);
 			buildingSprites.push(Assets.HOUSE_MIDDLE);
 			//buildingSprites.push(Assets.HOUSE_RIGHT);
-			
-			// Temporary: Purple skyline is the disco club
-			//buildingSprites.push(Assets.SKYLINE_PURPLE);
 
 			_buildings = new Array();
 			
@@ -98,7 +96,7 @@ package states
 						
 						// Disco club
 						if (row == _map.targetBuilding.x && col == _map.targetBuilding.y) {
-							sprite = Assets.SKYLINE_PURPLE;
+							sprite = Assets.NIGHT_CLUB;
 						}
 						// Random building sprite
 						else {

@@ -26,6 +26,7 @@ package
 		[Embed(source = "/gfx/buildings/parc.png")] public static const GARDEN:Class;
 		[Embed(source = "/gfx/buildings/tour_vert.png")] public static const SKYLINE_GREEN:Class;
 		[Embed(source = "/gfx/buildings/tour_violet.png")] public static const SKYLINE_PURPLE:Class;
+		[Embed(source = "/gfx/buildings/nightclub.png")] public static const NIGHT_CLUB:Class;
 
 		// Actors
 		[Embed(source = "/gfx/heenok.png")] public static const HEENOK_TILESET:Class;
