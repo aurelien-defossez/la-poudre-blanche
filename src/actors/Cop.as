@@ -23,11 +23,11 @@ package actors {
 
 		public function get currentDirection() : uint { return _currentDirection; };
 
-		public function Cop(collideMap:FlxTilemap, player:Player) {
+		public function Cop(collideMap:FlxTilemap, player:Player, x:Number, y:Number) {
 			_player = player
 			_collideMap = collideMap;
 
-			super(1.5 * Config.tileSize, 1.5 * Config.tileSize);
+			super(x, y);
 			_bombTimer = 0;
 
 			loadGraphic(Assets.GERARD_TILESET, true, false, 64, 64)
@@ -89,37 +89,37 @@ package actors {
 					velocity.y = 0;
 				}
 			}
-			
-			if (velocity.x > 0 || velocity.y > 0) {
+
+			if (velocity.x != 0 || velocity.y != 0) {
 				if (pathAngle > 45 && pathAngle <= 135) {
-					play("walk-east");
-				_currentDirection = FlxObject.RIGHT;
+					play("run-east");
+					_currentDirection = FlxObject.RIGHT;
+				}
+				else if (pathAngle <= -45 && pathAngle > -135) {
+					play("run-west");
+					_currentDirection = FlxObject.LEFT;
+				}
+				else if (pathAngle > -45 && pathAngle <= 45) {
+					play("run-north");
+					_currentDirection = FlxObject.UP;
 				}
 				else if (pathAngle > 135 || pathAngle <= -135) {
-					play("walk-south");
-				_currentDirection = FlxObject.DOWN;
-				}
-				else if (pathAngle < -35 && pathAngle > -135) {
-					play("walk-west");
-				_currentDirection = FlxObject.LEFT;
-				}
-				else if (pathAngle > -45 || pathAngle <= 45) {
-					play("walk-north");
-				_currentDirection = FlxObject.UP;
+					play("run-south");
+					_currentDirection = FlxObject.DOWN;
 				}
 			}
 			else {
 				if (pathAngle > 45 && pathAngle <= 135) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
 				}
-				else if (pathAngle > 135 || pathAngle <= -135) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
-				}
-				else if (pathAngle < -45 && pathAngle > -135) {
+				else if (pathAngle <= -45 && pathAngle > -135) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
 				}
-				else if (pathAngle > -45 || pathAngle <= 45) {
+				else if (pathAngle > -45 && pathAngle <= 45) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
+				}
+				else if (pathAngle > 135 || pathAngle <= -135) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
 				}
 			}
 
