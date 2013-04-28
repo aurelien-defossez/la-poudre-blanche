@@ -5,8 +5,8 @@ package maps
 	 * @author Aurelien Defossez
 	 */
 	public class Map {
-		
-		private var _map:Array;
+		private var _map:Object;
+		private var _mapData:Array;
 		private var _nRows:int;
 		private var _nCols:int;
 		private var _collisionMap:String;
@@ -16,21 +16,24 @@ package maps
 		public function get nCols() : int { return _nCols; };
 		public function get collisionMap() : String { return _collisionMap; };
 		public function get roadMap() : String { return _roadMap; };
+		public function get player() : Object { return _map.player; };
+		public function get target() : Object { return _map.target; };
 		
 		public function Map();
 		
-		public function load(roadMap:String) : void {
-			_map = new Array();
-			_roadMap = roadMap;
+		public function load(map:Object) : void {
+			_map = map;
+			_mapData = new Array();
+			_roadMap = map.map;
 			
-			var rows:Array = roadMap.split("\n");
+			var rows:Array = _roadMap.split("\n");
 			_nRows = rows.length;
 			for (var i:int = 0; i < _nRows; i++) {
-				_map[i] = rows[i].split(",");
-				_nCols = _map[i].length;
+				_mapData[i] = rows[i].split(",");
+				_nCols = _mapData[i].length;
 				
 				for (var j:int = 0; j < _nCols; j++) {
-					_map[i][j] = (_map[i][j] == 0) ? 1 : 0;
+					_mapData[i][j] = (_mapData[i][j] == 0) ? 1 : 0;
 				}
 			}
 			
@@ -38,7 +41,7 @@ package maps
 		}
 		
 		public function generate(nRows:int, nCols:int) : void {
-			_map = new Array();
+			_mapData = new Array();
 			_nRows = nRows;
 			_nCols = nCols;
 			
@@ -48,17 +51,17 @@ package maps
 			
 			// Initialize map
 			for (i = 0;  i < nRows; i++) {
-				_map[i] = new Array();
+				_mapData[i] = new Array();
 				
 				for (j = 0;  j < nCols; j++) {
-					_map[i][j] = 1;
+					_mapData[i][j] = 1;
 				}
 			}
 			
 			// Create main strees
 			for (i = 1;  i < nRows - 1; i += 2) {
 				for (j = 1;  j < nCols - 1; j++) {
-					_map[i][j] = 0;
+					_mapData[i][j] = 0;
 				}
 			}
 			
@@ -67,7 +70,7 @@ package maps
 				var intersections:int = Math.round(2 + Math.random() * nCols / 6);
 				
 				for (k = 0; k < intersections; k++) {
-					_map[i][3 + Math.floor(Math.random() * (nCols - 6))] = 0;
+					_mapData[i][3 + Math.floor(Math.random() * (nCols - 6))] = 0;
 				}
 			}
 			
@@ -76,7 +79,7 @@ package maps
 				var buildings:int = Math.round(Math.random() * nCols / 6);
 				
 				for (k = 0; k < buildings; k++) {
-					_map[i][1 + Math.floor(Math.random() * nCols - 2)] = 1;
+					_mapData[i][1 + Math.floor(Math.random() * nCols - 2)] = 1;
 				}
 			}*/
 			
@@ -85,14 +88,14 @@ package maps
 		}
 		
 		public function at(i:int, j:int) : int {
-			return _map[i][j];
+			return _mapData[i][j];
 		}
 		
 		public function computeCollisionMap() : void {
 			var rows:Array = new Array();
 			
 			for (var i:int = 0; i < _nRows; i++) {
-				rows.push(_map[i].join(","));
+				rows.push(_mapData[i].join(","));
 			}
 			
 			_collisionMap = rows.join("\n");
@@ -103,7 +106,7 @@ package maps
 			
 			for (var i:int = 0; i < nRows; i++) {
 				for (var j:int = 0; j < nCols; j++) {
-					buffer += ((_map[i][j] == 0) ? 1 : 0) + ",";
+					buffer += ((_mapData[i][j] == 0) ? 1 : 0) + ",";
 				}
 				buffer += "\n";
 			}

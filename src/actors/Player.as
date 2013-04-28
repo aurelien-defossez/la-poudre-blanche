@@ -30,8 +30,8 @@ package actors {
 
 		public function get runTimer() : Number { return _runTimer; };
 
-		public function Player(inputController:Controller, state:PlayState, i:Number, j:Number) {
-			super(j * Config.tileSize, i * Config.tileSize);
+		public function Player(inputController:Controller, state:PlayState) {
+			super();
 
 			_state = state;
 			_drugCounter = Config.baseDrugCounter;
