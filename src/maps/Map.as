@@ -1,5 +1,6 @@
 package maps 
 {	
+	import org.flixel.FlxPoint;
 	/**
 	 * ...
 	 * @author Aurelien Defossez
@@ -9,11 +10,14 @@ package maps
 		private var _mapData:Array;
 		private var _nRows:int;
 		private var _nCols:int;
+		private var _length:int;
 		private var _collisionMap:String;
 		private var _roadMap:String;
+		private var _soundSource:Object;
 		
 		public function get nRows() : int { return _nRows; };
 		public function get nCols() : int { return _nCols; };
+		public function get length() : int { return _length; };
 		public function get collisionMap() : String { return _collisionMap; };
 		public function get roadMap() : String { return _roadMap; };
 		public function get player() : Object { return _map.player; };
@@ -31,6 +35,11 @@ package maps
 				y: _map.target.y + 1
 			};
 			
+			_soundSource = {
+				x: (_map.target.y + 0.5) * Config.tileSize,
+				y: (_map.target.x + 1) * Config.tileSize
+			}
+			
 			var rows:Array = _roadMap.split("\n");
 			_nRows = rows.length;
 			for (var i:int = 0; i < _nRows; i++) {
@@ -41,6 +50,8 @@ package maps
 					_mapData[i][j] = (_mapData[i][j] == 0) ? 1 : 0;
 				}
 			}
+			
+			_length = Math.max(_nRows, _nCols) * Config.tileSize;
 			
 			computeCollisionMap();
 		}
@@ -117,6 +128,13 @@ package maps
 			}
 			
 			_roadMap = buffer;
+		}
+		
+		public function distanceToSource(point:FlxPoint) : Number {
+			var dx:Number = (point.x - _soundSource.x);
+			var dy:Number = (point.y - _soundSource.y);
+			
+			return Math.sqrt(dx * dx + dy * dy);
 		}
 	}
 

@@ -10,6 +10,7 @@ package states
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxSound;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
@@ -49,6 +50,9 @@ package states
 
 		/** The input controller */
 		private var _inputController:KeyboardController;
+		
+		/** The sounds */
+		private var _music:FlxSound;
 		
 		public function PlayState() {
 		}
@@ -150,10 +154,17 @@ package states
 			// Apply maps
 			_player.collideMap = _collideMap;
 			_cop.collideMap = _collideMap;
+			
+			// Play music
+			_music = FlxG.loadSound(Assets.MUSIC_TUTTI, 0, true, false, true);
 
 			// Make the camera follow the player
 			FlxG.camera.follow(_player);
 			_backgroundTilemap.follow();
+		}
+		
+		public function stopLevel() : void {
+			_music.stop();
 		}
 
 		public override function update() : void {
@@ -162,6 +173,9 @@ package states
 			var i:int;
 			var j:int;
 			var changedTile:Boolean = _player.changedTile();
+			
+			// Update music volume
+			_music.volume = 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length);
 
 			// Update buildings manually
 			for (i = 0; i < _map.nRows; i++) {

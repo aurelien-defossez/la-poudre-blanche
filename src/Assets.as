@@ -30,6 +30,11 @@ package
 		// Actors
 		[Embed(source = "/gfx/heenok.png")] public static const HEENOK_TILESET:Class;
 		[Embed(source = "/gfx/gerard.png")] public static const GERARD_TILESET:Class;
+		
+		// Musics
+		[Embed(source = "/audio/Musics/nightclub_bass.mp3")] public static const MUSIC_BASS:Class;
+		[Embed(source = "/audio/Musics/nightclub_sup.mp3")] public static const MUSIC_SUP:Class;
+		[Embed(source = "/audio/Musics/nightclub_tutti.mp3")] public static const MUSIC_TUTTI:Class;
 
 		// Actors tilesheets data
 		public static const DIRECTIONS:Object = {
