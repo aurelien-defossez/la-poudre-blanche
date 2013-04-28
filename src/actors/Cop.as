@@ -18,7 +18,7 @@ package actors {
 		private var lastPathUpdate:Number = 2;
 
 		private var _bombTimer:Number;
-		
+
 		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
 		public function Cop(player:Player) {
@@ -82,17 +82,33 @@ package actors {
 				}
 			}
 
-			if (pathAngle > 45 && pathAngle <= 135) {
-				play("walk-east");
+			if (velocity.x > 0 || velocity.y > 0) {
+				if (pathAngle > 45 && pathAngle <= 135) {
+					play("walk-east");
+				}
+				else if (pathAngle > 135 || pathAngle <= -135) {
+					play("walk-south");
+				}
+				else if (pathAngle < -35 && pathAngle > -135) {
+					play("walk-west");
+				}
+				else if (pathAngle > -45 || pathAngle <= 45) {
+					play("walk-north");
+				}
 			}
-			else if (pathAngle > 135 || pathAngle <= -135) {
-				play("walk-south");
-			}
-			else if (pathAngle < -35 && pathAngle > -135) {
-				play("walk-west");
-			}
-			else if (pathAngle > -45 || pathAngle <= 45) {
-				play("walk-north");
+			else {
+				if (pathAngle > 45 && pathAngle <= 135) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
+				}
+				else if (pathAngle > 135 || pathAngle <= -135) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
+				}
+				else if (pathAngle < -45 && pathAngle > -135) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
+				}
+				else if (pathAngle > -45 || pathAngle <= 45) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
+				}
 			}
 
 			super.update();
@@ -105,12 +121,12 @@ package actors {
                 copPath.drawDebug();
             }
         }
-		
+
 		public override function play(animation:String, force:Boolean = false) : void {
 			if (force || animation == _currentAnimation) {
 				super.play(animation, force);
 			}
-			
+
 			_currentAnimation = animation;
 		}
 

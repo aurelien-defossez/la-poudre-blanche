@@ -22,7 +22,7 @@ package actors {
 		private var _runTimer:Number;
 		/** Each drug consumption increase this counter : use it to make crazy things */
 		private var _intoxication:int;
-		
+
 		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
 		public function get drugCounter() : int { return _drugCounter; };
@@ -77,7 +77,7 @@ package actors {
 				direction.y = 1;
 				move();
 			}
-			else {
+			else if (_inputController.movementKeyPressed()) {
 				direction.y = 0;
 			}
 
@@ -89,7 +89,7 @@ package actors {
 				direction.x = 1;
 				move();
 			}
-			else {
+			else if (_inputController.movementKeyPressed()) {
 				direction.x = 0;
 			}
 
@@ -127,16 +127,16 @@ package actors {
 			}
 			else {
 				if (direction.x == 1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
-				}
-				else if (direction.x == -1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
-				}
-				else if (direction.y == 1) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
 				}
-				else if (direction.y == -1) {
+				else if (direction.x == -1) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
+				}
+				else if (direction.y == 1) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
+				}
+				else if (direction.y == -1) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
 				}
 				else {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
