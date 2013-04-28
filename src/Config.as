@@ -12,8 +12,10 @@ package
 		public static const buildingAlpha:Number = 0.5;
 		public static const baseDrugCounter:int = 5;
 		public static const runTime:Number = 3;
+		public static const runIntox:Number = 1;
 		public static const ninjaBombTime:Number = 3;
-		public static const ninjaBombRadius:Number = 50;
+		public static const ninjaBombIntox:Number = 2;
+		public static const ninjaBombRadius:Number = 140;
 		public static const ponycornAlphaSpeed:Number = 0.02;
 	}
 

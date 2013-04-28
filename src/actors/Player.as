@@ -95,6 +95,7 @@ package actors {
 			if (_drugCounter > 0) {
 				// Speed shoot
 				if (_inputController.actionA) {
+					_intoxication += Config.runIntox;
 					_drugCounter--;
 					_runTimer += Config.runTime;
 				}
@@ -102,8 +103,9 @@ package actors {
 				// Ninja powder
 				if (_inputController.actionB)
 				{
+					_intoxication += Config.ninjaBombIntox;
 					_drugCounter--;
-					_state.dropBomb(x, y);
+					_state.dropBomb(x + width / 2, y + height / 2);
 				}
 			}
 

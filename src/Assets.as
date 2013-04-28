@@ -10,7 +10,8 @@ package
 		// -------------------------------------------------------------------------------------------------
 		[Embed(source = "/gfx/debug_tileset.png")] public static const DEBUG_TILESET:Class;
 		[Embed(source = "/gfx/roads.png")] public static const ROAD_TILESET:Class;
-		[Embed(source = "/gfx/ponycorn.png")] public static const PONYCORN:Class;
+		[Embed(source = "/gfx/ponycorn.png")] public static const PONYCORN:Class; 
+		[Embed(source = "/gfx/bombeensemble.png")] public static const NINJA_ANIMATION:Class;
 		
 		// Buildings
 		[Embed(source = "/gfx/buildings/sol.png")] public static const GROUND:Class;

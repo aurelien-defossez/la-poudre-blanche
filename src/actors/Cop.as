@@ -1,6 +1,7 @@
 package actors {
 
 	import org.flixel.FlxG;
+	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
@@ -18,7 +19,10 @@ package actors {
 		private var lastPathUpdate:Number = 2;
 
 		private var _bombTimer:Number;
+		private var _currentDirection:uint;
 
+		public function get currentDirection() : uint { return _currentDirection; };
+		
 		public function Cop(collideMap:FlxTilemap, player:Player) {
 			_collideMap = collideMap;
 			_player = player
@@ -82,15 +86,19 @@ package actors {
 			}
 
 			if (pathAngle > 45 && pathAngle <= 135) {
+				_currentDirection = FlxObject.RIGHT;
 				play("walk-east");
 			}
 			else if (pathAngle > 135 || pathAngle <= -135) {
+				_currentDirection = FlxObject.DOWN;
 				play("walk-south");
 			}
 			else if (pathAngle < -35 && pathAngle > -135) {
+				_currentDirection = FlxObject.LEFT;
 				play("walk-west");
 			}
 			else if (pathAngle > -45 || pathAngle <= 45) {
+				_currentDirection = FlxObject.UP;
 				play("walk-north");
 			}
 

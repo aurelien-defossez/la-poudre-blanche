@@ -8,6 +8,7 @@ package states
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
+	import org.flixel.FlxObject;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
@@ -217,9 +218,8 @@ package states
 		public function dropBomb(x:int, y:int) : void {
 			// The bomb is dropped at the given location
 			
-			
-			// Spawn the ponycorn
-			_actors.add(new Ponycorn(x, y));
+			// Add the animation
+			_actors.add(new NinjaAnimation(x, y));
 			 
 			// Check for nearby cops
 			for (var i:int = 0; i < _cops.length; i++) {
@@ -229,6 +229,30 @@ package states
 				if (distance < Config.ninjaBombRadius) {
 					// The cop is hit by the bomb
 					cop.takeBomb();
+					
+					// The pony is placed according to the cop direction
+					var dir:uint = cop.currentDirection;
+					var x:int = cop.x;
+					var y:int = cop.y;
+					
+					var pony:Ponycorn = new Ponycorn(0, 0);
+					if (dir ==FlxObject.UP) {
+						// up
+						y = cop.y - pony.height;
+					} else if (dir == FlxObject.DOWN) {
+						y = cop.y + cop.height;
+						// down
+					} else if (dir == FlxObject.LEFT) {
+						// left
+						x = cop.x - pony.width;
+					} else {
+						// right
+						x = cop.x + cop.width;
+					}
+					
+					pony.x = x;
+					pony.y = y;
+					_actors.add(pony);
 				}
 			}
 		}
