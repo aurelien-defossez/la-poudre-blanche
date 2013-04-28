@@ -12,6 +12,8 @@ package
 		[Embed(source = "/gfx/roads.png")] public static const ROAD_TILESET:Class;
 		[Embed(source = "/gfx/ponycorn.png")] public static const PONYCORN:Class; 
 		[Embed(source = "/gfx/bombeensemble.png")] public static const NINJA_ANIMATION:Class;
+		[Embed(source = "/gfx/fantomeensemble.png")] public static const GHOST_ANIMATION:Class;
+		[Embed(source = "/gfx/elephant.png")] public static const ELEPHANT:Class;
 		
 		// Buildings
 		[Embed(source = "/gfx/buildings/sol.png")] public static const GROUND:Class;

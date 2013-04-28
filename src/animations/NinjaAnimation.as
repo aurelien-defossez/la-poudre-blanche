@@ -1,4 +1,4 @@
-package  
+package animations 
 {
 	import org.flixel.FlxSprite;
 	/**

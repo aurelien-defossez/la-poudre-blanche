@@ -16,7 +16,7 @@ package states
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
 	import sets.Building;
-
+	import animations.NinjaAnimation
 	import actors.Cop;
 	import actors.Player;
 
