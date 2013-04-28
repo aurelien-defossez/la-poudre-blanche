@@ -17,7 +17,8 @@ package maps
 		public function get collisionMap() : String { return _collisionMap; };
 		public function get roadMap() : String { return _roadMap; };
 		public function get player() : Object { return _map.player; };
-		public function get target() : Object { return _map.target; };
+		public function get targetBuilding() : Object { return _map.target; };
+		public function get targetTile() : Object { return _map.targetTile; };
 		
 		public function Map();
 		
@@ -25,6 +26,10 @@ package maps
 			_map = map;
 			_mapData = new Array();
 			_roadMap = map.map;
+			_map.targetTile = {
+				x: _map.target.x,
+				y: _map.target.y + 1
+			};
 			
 			var rows:Array = _roadMap.split("\n");
 			_nRows = rows.length;

@@ -92,9 +92,12 @@ package states
 					if (_map.at(row, col) == 1) {
 						var sprite:Class;
 						
-						if (row == _map.target.x && col == _map.target.y) {
+						// Disco club
+						if (row == _map.targetBuilding.x && col == _map.targetBuilding.y) {
 							sprite = Assets.SKYLINE_PURPLE;
-						} else {
+						}
+						// Random building sprite
+						else {
 							sprite = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
 						}
 						

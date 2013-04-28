@@ -25,6 +25,7 @@ package
 		public static const ninjaBombRadius:Number = 140;
 		public static const ponycornAlphaSpeed:Number = 0.02;
 		
+		// Levels
 		public static const levels:Array = [{
 			map:
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
