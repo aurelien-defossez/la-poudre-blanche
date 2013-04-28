@@ -10,6 +10,7 @@ package actors {
 	public class Cop extends FlxSprite {
 
 		public var direction:FlxPoint;
+		public var patrolOrigin:FlxPoint;
 
 		private var _collideMap:FlxTilemap;
 		private var _player:Player;
@@ -17,6 +18,8 @@ package actors {
 
 		private var copPath:FlxPath;
 		private var lastPathUpdate:Number = 2;
+		private var chasingPlayer:Boolean = false;
+		private var notChasingPlayerSince:Number = 0;
 
 		private var _bombTimer:Number;
 		private var _currentDirection:uint;
@@ -24,10 +27,11 @@ package actors {
 		public function get currentDirection() : uint { return _currentDirection; };
 
 		public function Cop(collideMap:FlxTilemap, player:Player, x:Number, y:Number) {
-			_player = player
+			_player = player;
 			_collideMap = collideMap;
 
 			super(x, y);
+			patrolOrigin = new FlxPoint(x, y);
 			_bombTimer = 0;
 
 			loadGraphic(Assets.GERARD_TILESET, true, false, 64, 64)
@@ -53,40 +57,33 @@ package actors {
 				// Bombed : do crazy stuff or nothing
 				_bombTimer -= FlxG.elapsed;
 
-				if (copPath) {
-					copPath = null;
-					stopFollowingPath(true);
-				}
-				velocity.x = 0;
-				velocity.y = 0;
-			} else {
-				// prepare cop start and end position
-				var pathStart:FlxPoint = getCenter();
-				var pathEnd:FlxPoint = _player.getCenter();
-				var squaredDistanceToPlayer:Number = (_player.x - x) * (_player.x - x) + (_player.y - y) * (_player.y - y);
+				stopMoving();
+			}
+			else {
+				lastPathUpdate += FlxG.elapsed;
 
-				lastPathUpdate = lastPathUpdate + FlxG.elapsed;
-
-				if (
-					lastPathUpdate > Config.copPathFindingPeriod &&
-					squaredDistanceToPlayer < Config.copMinSquaredDistanceToPlayerToDetect &&
-					canSeePlayer(pathStart, pathEnd)
-				) {
+				if (lastPathUpdate > Config.copPathFindingPeriod) {
 					lastPathUpdate -= Config.copPathFindingPeriod;
-					copPath = _collideMap.findPath(pathStart, pathEnd);
-					if (copPath) {
-						followPath(copPath);
+
+					var squaredDistanceToPlayer:Number = (_player.x - x) * (_player.x - x) + (_player.y - y) * (_player.y - y);
+					if (squaredDistanceToPlayer < Config.copMinSquaredDistanceToPlayerToDetect) {
+						// prepare cop start and end position
+						var pathStart:FlxPoint = getMidpoint();
+						var pathEnd:FlxPoint = _player.getMidpoint();
+
+						if (canSeePlayer(pathStart, pathEnd)) {
+							copPath = _collideMap.findPath(pathStart, pathEnd);
+							if (copPath) {
+								chasingPlayer = true;
+								followPath(copPath);
+							}
+						}
 					}
 				}
 
 				// Stop cop when end of path is reached
 				if (pathSpeed == 0) {
-					if (copPath) {
-						copPath = null;
-						stopFollowingPath(true);
-					}
-					velocity.x = 0;
-					velocity.y = 0;
+					stopMoving();
 				}
 			}
 
@@ -124,6 +121,15 @@ package actors {
 			}
 
 			super.update();
+		}
+
+		public function stopMoving() : void {
+			if (copPath) {
+				copPath = null;
+				stopFollowingPath(true);
+			}
+			velocity.x = 0;
+			velocity.y = 0;
 		}
 
         public override function draw() : void {
