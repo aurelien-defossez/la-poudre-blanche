@@ -73,12 +73,15 @@ package states
 			buildingSprites.push(Assets.BUILDING_1);
 			buildingSprites.push(Assets.BUILDING_2);
 			buildingSprites.push(Assets.HOUSE_1);
+			buildingSprites.push(Assets.GARDEN);
+			buildingSprites.push(Assets.SKYLINE_GREEN);
+			
 			//buildingSprites.push(Assets.HOUSE_LEFT);
 			buildingSprites.push(Assets.HOUSE_MIDDLE);
 			//buildingSprites.push(Assets.HOUSE_RIGHT);
-			buildingSprites.push(Assets.GARDEN);
-			buildingSprites.push(Assets.SKYLINE_GREEN);
-			buildingSprites.push(Assets.SKYLINE_PURPLE);
+			
+			// Temporary: Purple skyline is the disco club
+			//buildingSprites.push(Assets.SKYLINE_PURPLE);
 
 			_buildings = new Array();
 			
@@ -87,7 +90,14 @@ package states
 				
 				for (var col:int = 0; col < _map.nCols; col++ ) {
 					if (_map.at(row, col) == 1) {
-						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
+						var sprite:Class;
+						
+						if (row == _map.target.x && col == _map.target.y) {
+							sprite = Assets.SKYLINE_PURPLE;
+						} else {
+							sprite = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
+						}
+						
 						_buildings[row][col] = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
 					}
 				}
