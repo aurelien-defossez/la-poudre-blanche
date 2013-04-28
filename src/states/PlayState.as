@@ -147,8 +147,8 @@ package states
 			_collideMap.loadMap(_map.collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 			
 			// Move player
-			_player.x = (_map.player.x + 0.3) * Config.tileSize
-			_player.y = (_map.player.y + 0.25) * Config.tileSize
+			_player.x = (_map.player.y + 0.3) * Config.tileSize
+			_player.y = (_map.player.x + 0.25) * Config.tileSize
 			
 			// Apply maps
 			_player.collideMap = _collideMap;
