@@ -63,10 +63,15 @@ package actors {
 				// prepare cop start and end position
 				var pathStart:FlxPoint = getCenter();
 				var pathEnd:FlxPoint = _player.getCenter();
+				var squaredDistanceToPlayer:Number = (_player.x - x) * (_player.x - x) + (_player.y - y) * (_player.y - y);
 
 				lastPathUpdate = lastPathUpdate + FlxG.elapsed;
 
-				if (lastPathUpdate > Config.copPathFindingPeriod && canSeePlayer(pathStart, pathEnd)) {
+				if (
+					lastPathUpdate > Config.copPathFindingPeriod &&
+					squaredDistanceToPlayer < Config.copMinSquaredDistanceToPlayerToDetect &&
+					canSeePlayer(pathStart, pathEnd)
+				) {
 					lastPathUpdate -= Config.copPathFindingPeriod;
 					copPath = _collideMap.findPath(pathStart, pathEnd);
 					if (copPath) {
