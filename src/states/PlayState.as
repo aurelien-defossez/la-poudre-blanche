@@ -1,12 +1,16 @@
 package states
 {
+	import actors.Cop;
 	import actors.ElephantHallucination;
 	import actors.GhostAnimation;
 	import actors.Player;
 	import actors.Ponycorn;
+	import animations.NinjaAnimation;
 	import flash.text.CSMSettings;
 	import input.KeyboardController;
 	import maps.Map;
+	import sets.Building;
+
 	import org.flixel.FlxBasic;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
@@ -18,10 +22,6 @@ package states
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
-	import sets.Building;
-	import animations.NinjaAnimation
-	import actors.Cop;
-	import actors.Player;
 
 	/**
 	 * ...
@@ -235,7 +235,12 @@ package states
 				var playerPosition:Object = _player.getTileIndex();
 
 				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
-					FlxG.switchState(new PlayState(_currentLevel + 1));
+					if (_currentLevel + 1 > Config.levelMax) {
+						FlxG.switchState(new EndGameState());
+					}
+					else {
+						FlxG.switchState(new PlayState(_currentLevel + 1));
+					}
 				}
 
 				// Fade tiles to the left (and the current tile)

@@ -94,6 +94,7 @@ package
 			target: { x: 6, y: 11 },
 			cops: []
 		}];
+		public static const levelMax:Number = levels.length;
 	}
 
 }
