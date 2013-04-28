@@ -48,6 +48,7 @@ package
 		[Embed(source = "/audio/SDs/walk.mp3")] public static const WALK:Class;
 		[Embed(source = "/audio/SDs/plop.mp3")] public static const PLOP:Class;
 		[Embed(source = "/audio/SDs/run.mp3")] public static const RUN:Class;
+		[Embed(source = "/audio/SDs/police_sirens.mp3")] public static const POLICE:Class;
 		
 		
 		

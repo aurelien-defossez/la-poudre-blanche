@@ -59,6 +59,7 @@ package states
 		/** The sounds */
 		private var _bass:FlxSound;
 		private var _music:FlxSound;
+		private var _policeSound:FlxSound;
 		
 		private var _randomMachine:RandomMachine;
 		
@@ -173,6 +174,7 @@ package states
 			// Play music
 			_bass = FlxG.loadSound(Assets.MUSIC_BASS, 0, true, false, true);
 			_music = FlxG.loadSound(Assets.MUSIC_SUP, 0, true, false, true);
+			_policeSound = FlxG.loadSound(Assets.POLICE, 0, true, false, true);
 
 			// Make the camera follow the player
 			FlxG.camera.follow(_player);
@@ -188,6 +190,7 @@ package states
 					_spawnedHallucinations[i][j] = null;
 				}
 			}
+			
 		}
 		
 		public function stopLevel() : void {
@@ -268,6 +271,21 @@ package states
 						_spawnedHallucinations[x][y] = null;
 					}
 				}
+			}
+			
+			// Check for cops around the player
+			var minDistance:Number = Number.POSITIVE_INFINITY;
+			for (var c:int = 0; c < _cops.length; c++) {
+				var cop:Cop = _cops.members[c];
+				
+				var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
+				minDistance = Math.min(distance, minDistance);
+			}
+			trace(minDistance);
+			if (minDistance < Config.copSoundRadius) {
+				_policeSound.volume = 1;
+			} else {
+				_policeSound.volume = 0;
 			}
 		}
 

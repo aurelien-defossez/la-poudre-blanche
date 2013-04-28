@@ -18,6 +18,7 @@ package
 
 		// Cops
 		public static const copPathFindingPeriod:Number = 0.5;
+		public static const copSoundRadius:Number = 130;
 
 		// Drug and powers
 		public static const runTime:Number = 3;
