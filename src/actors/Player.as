@@ -172,12 +172,14 @@ package actors {
 		}
 
 		public function changedTile() : Boolean {
+			var center:FlxPoint;
+			
 			// Do not call this method in update, because it returns a boolean
 			// telling if the player has changed tile since the last update,
 			// which is used by the game to know which buildings to fade
 
 			if (_tileIndex == null) {
-				var center:FlxPoint = getMidpoint();
+				center = getMidpoint();
 				_tileIndex = Utils.getTile(center.x, center.y);
 				return true;
 			} else {
@@ -186,7 +188,7 @@ package actors {
 					j: _tileIndex.j
 				};
 
-				var center:FlxPoint = getMidpoint();
+				center = getMidpoint();
 				_tileIndex = Utils.getTile(center.x, center.y);
 				return (_tileIndex.i != previousTile.i || _tileIndex.j != previousTile.j);
 			}

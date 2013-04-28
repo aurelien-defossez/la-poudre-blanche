@@ -228,7 +228,7 @@ package states
 			if (changedTile) {
 				var playerPosition:Object = _player.getTileIndex();
 				
-				if (playerPosition.i == _map.targetTile.x && aaaaa.j == _map.targetTile.y) {
+				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
 					trace("The end");
 				}
 
@@ -285,7 +285,7 @@ package states
 				var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
 				minDistance = Math.min(distance, minDistance);
 			}
-			trace(minDistance);
+			
 			if (minDistance < Config.copSoundRadius) {
 				_policeSound.volume = 1;
 			} else {
