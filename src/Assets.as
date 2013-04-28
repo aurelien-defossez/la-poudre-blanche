@@ -14,6 +14,8 @@ package
 		[Embed(source = "/gfx/bombeensemble.png")] public static const NINJA_ANIMATION:Class;
 		[Embed(source = "/gfx/fantomeensemble.png")] public static const GHOST_ANIMATION:Class;
 		[Embed(source = "/gfx/elephant.png")] public static const ELEPHANT:Class;
+		[Embed(source = "/gfx/hudfond.png")] public static const HUD:Class; 
+		[Embed(source = "/gfx/hudnez.png")] public static const HUD_NOSE:Class; 
 		
 		// Buildings
 		[Embed(source = "/gfx/buildings/sol.png")] public static const GROUND:Class;
@@ -31,6 +33,11 @@ package
 		[Embed(source = "/gfx/heenok.png")] public static const HEENOK_TILESET:Class;
 		[Embed(source = "/gfx/gerard.png")] public static const GERARD_TILESET:Class;
 
+		// Font
+		[Embed(source = "/erasdust.ttf", fontFamily = "EraserDust", embedAsCFF = "false")] public static const FONT_DEF:Class;
+		public static var FONT:String = "EraserDust";
+		
+		
 		// Actors tilesheets data
 		public static const DIRECTIONS:Object = {
 			south: 0,

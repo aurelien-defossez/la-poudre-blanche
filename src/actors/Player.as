@@ -34,7 +34,7 @@ package actors {
 			super();
 
 			_state = state;
-			_drugCounter = Config.baseDrugCounter;
+			_drugCounter = Config.baseDrugCount;
 			_intoxication = 0;
 			_runTimer = 0;
 			_inputController = inputController;
@@ -95,17 +95,17 @@ package actors {
 
 			if (_drugCounter > 0) {
 				// Speed shoot
-				if (_inputController.actionA) {
+				if (_inputController.actionA && _drugCounter >= Config.runPrice) {
 					_intoxication += Config.runIntox;
-					_drugCounter--;
+					_drugCounter -= Config.runPrice;
 					_runTimer += Config.runTime;
 				}
 
 				// Ninja powder
-				if (_inputController.actionB)
+				if (_inputController.actionB && _drugCounter >= Config.ninjaPrice)
 				{
 					_intoxication += Config.ninjaBombIntox;
-					_drugCounter--;
+					_drugCounter -= Config.ninjaPrice;
 					_state.dropBomb(x + width / 2, y + height / 2);
 				}
 			}
