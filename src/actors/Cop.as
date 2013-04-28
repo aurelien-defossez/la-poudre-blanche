@@ -22,9 +22,9 @@ package actors {
 		private var _currentDirection:uint;
 
 		public function get currentDirection() : uint { return _currentDirection; };
-		
+		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
+
 		public function Cop(collideMap:FlxTilemap, player:Player) {
-			_collideMap = collideMap;
 			_player = player
 
 			super(1.5 * Config.tileSize, 1.5 * Config.tileSize);
@@ -84,22 +84,38 @@ package actors {
 					velocity.y = 0;
 				}
 			}
-
-			if (pathAngle > 45 && pathAngle <= 135) {
+			
+			if (velocity.x > 0 || velocity.y > 0) {
+				if (pathAngle > 45 && pathAngle <= 135) {
+					play("walk-east");
 				_currentDirection = FlxObject.RIGHT;
-				play("walk-east");
-			}
-			else if (pathAngle > 135 || pathAngle <= -135) {
+				}
+				else if (pathAngle > 135 || pathAngle <= -135) {
+					play("walk-south");
 				_currentDirection = FlxObject.DOWN;
-				play("walk-south");
-			}
-			else if (pathAngle < -35 && pathAngle > -135) {
+				}
+				else if (pathAngle < -35 && pathAngle > -135) {
+					play("walk-west");
 				_currentDirection = FlxObject.LEFT;
-				play("walk-west");
-			}
-			else if (pathAngle > -45 || pathAngle <= 45) {
+				}
+				else if (pathAngle > -45 || pathAngle <= 45) {
+					play("walk-north");
 				_currentDirection = FlxObject.UP;
-				play("walk-north");
+				}
+			}
+			else {
+				if (pathAngle > 45 && pathAngle <= 135) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
+				}
+				else if (pathAngle > 135 || pathAngle <= -135) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
+				}
+				else if (pathAngle < -45 && pathAngle > -135) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
+				}
+				else if (pathAngle > -45 || pathAngle <= 45) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
+				}
 			}
 
 			super.update();
@@ -112,12 +128,12 @@ package actors {
                 copPath.drawDebug();
             }
         }
-		
+
 		public override function play(animation:String, force:Boolean = false) : void {
 			if (force || animation == _currentAnimation) {
 				super.play(animation, force);
 			}
-			
+
 			_currentAnimation = animation;
 		}
 

@@ -23,19 +23,20 @@ package actors {
 		/** Each drug consumption increase this counter : use it to make crazy things */
 		private var _intoxication:int;
 
+		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
+
 		public function get drugCounter() : int { return _drugCounter; };
 		public function set drugCounter(value:int) : void { _drugCounter = value; };
 
 		public function get runTimer() : Number { return _runTimer; };
 
-		public function Player(collideMap:FlxTilemap, inputController:Controller, state:PlayState, i:Number, j:Number) {
+		public function Player(inputController:Controller, state:PlayState, i:Number, j:Number) {
 			super(j * Config.tileSize, i * Config.tileSize);
 
 			_state = state;
 			_drugCounter = Config.baseDrugCounter;
 			_intoxication = 0;
 			_runTimer = 0;
-			_collideMap = collideMap;
 			_inputController = inputController;
 
 			loadGraphic(Assets.HEENOK_TILESET, true, false, 64, 64)
@@ -76,7 +77,7 @@ package actors {
 				direction.y = 1;
 				move();
 			}
-			else {
+			else if (_inputController.movementKeyPressed()) {
 				direction.y = 0;
 			}
 
@@ -88,7 +89,7 @@ package actors {
 				direction.x = 1;
 				move();
 			}
-			else {
+			else if (_inputController.movementKeyPressed()) {
 				direction.x = 0;
 			}
 
@@ -128,16 +129,16 @@ package actors {
 			}
 			else {
 				if (direction.x == 1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
-				}
-				else if (direction.x == -1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
-				}
-				else if (direction.y == 1) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
 				}
-				else if (direction.y == -1) {
+				else if (direction.x == -1) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
+				}
+				else if (direction.y == 1) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
+				}
+				else if (direction.y == -1) {
+					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
 				}
 				else {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;

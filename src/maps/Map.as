@@ -9,9 +9,13 @@ package maps
 		private var _map:Array;
 		private var _nRows:int;
 		private var _nCols:int;
+		private var _collisionMap:String;
+		private var _roadMap:String;
 		
 		public function get nRows() : int { return _nRows; };
 		public function get nCols() : int { return _nCols; };
+		public function get collisionMap() : String { return _collisionMap; };
+		public function get roadMap() : String { return _roadMap; };
 		
 		public function Map(nRows:int, nCols:int) {
 			_map = new Array();
@@ -55,23 +59,26 @@ package maps
 					_map[i][1 + Math.floor(Math.random() * nCols - 2)] = 1;
 				}
 			}*/
+			
+			computeCollisionMap();
+			computeRoadMap();
 		}
 		
 		public function at(i:int, j:int) : int {
 			return _map[i][j];
 		}
 		
-		public function getCollisionMap() : String {
+		public function computeCollisionMap() : void {
 			var rows:Array = new Array();
 			
 			for (var i:int = 0; i < nRows; i++ ) {
 				rows.push(_map[i].join(","));
 			}
 			
-			return rows.join("\n");
+			_collisionMap = rows.join("\n");
 		}
 		
-		public function getRoadMap() : String {
+		public function computeRoadMap() : void {
 			var buffer:String = "";
 			
 			for (var i:int = 0; i < nRows; i++ ) {
@@ -81,7 +88,7 @@ package maps
 				buffer += "\n";
 			}
 			
-			return buffer;
+			_roadMap = buffer;
 		}
 	}
 

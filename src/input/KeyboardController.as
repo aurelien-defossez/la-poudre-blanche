@@ -1,4 +1,4 @@
-package input 
+package input
 {
 	import org.flixel.FlxG;
 
@@ -10,7 +10,7 @@ package input
 		public function KeyboardController() {
 			super();
 		}
-		
+
 		public override function update() : void {
 			_left = FlxG.keys.pressed("LEFT") || FlxG.keys.pressed("A") || FlxG.keys.pressed("Q");
 			_right = FlxG.keys.pressed("RIGHT") || FlxG.keys.pressed("D");
