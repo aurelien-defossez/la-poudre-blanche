@@ -44,8 +44,7 @@ package states
 		private var _actors:FlxGroup;
 
 		/** Buildings*/
-		private var _buildings:FlxGroup;
-		private var _buildingByCoordinate:Array;
+		private var _buildings:Array;
 
 		/** The input controller */
 		private var _inputController:KeyboardController;
@@ -80,18 +79,15 @@ package states
 			buildingSprites.push(Assets.SKYLINE_GREEN);
 			buildingSprites.push(Assets.SKYLINE_PURPLE);
 
-			_buildings = new FlxGroup();
-			_buildingByCoordinate = new Array();
+			_buildings = new Array();
 			
 			for (var row:int = 0; row < _map.nRows; row++ ) {
-				_buildingByCoordinate[row] = new Array();
+				_buildings[row] = new Array();
 				
 				for (var col:int = 0; col < _map.nCols; col++ ) {
 					if (_map.at(row, col) == 1) {
 						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
-						var building:Building = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
-						_buildings.add(building);
-						_buildingByCoordinate[row][col] = building;
+						_buildings[row][col] = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
 					}
 				}
 			}
@@ -146,19 +142,24 @@ package states
 
 			var i:int;
 			var j:int;
+			var changedTile:Boolean = _player.changedTile();
 
 			// Update buildings manually
-			for (i = 0; i < _buildings.length; i++) {
-				_buildings.members[i].update();
+			for (i = 0; i < _map.nRows; i++) {
+				for (j = 0; j < _map.nCols; j++) {
+					var building:Building = getBuilding(i, j);
+
+					if (building) {
+						building.update();
+
+						if (changedTile) {
+							building.alpha = 1;
+						}
+					}
+				}
 			}
 
-			// Compute player position (in tiles)
-			if (_player.changedTile()) {
-				// Reset buildings alpha
-				for (i = 0; i < _buildings.length; i++) {
-					_buildings.members[i].alpha = 1;
-				}
-
+			if (changedTile) {
 				var playerPosition:Object = _player.getTileIndex();
 
 				// Fade tiles to the left (and the current tile)
@@ -194,7 +195,7 @@ package states
 		}
 
 		private function getBuilding(i:Number, j:Number) : Building {
-			var row:Array = _buildingByCoordinate[i];
+			var row:Array = _buildings[i];
 
 			return (row) ? row[j] : null;
 		}
