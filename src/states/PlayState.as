@@ -1,5 +1,7 @@
 package states
 {
+	import actors.ElephantHallucination;
+	import actors.GhostAnimation;
 	import actors.Player;
 	import actors.Ponycorn;
 	import flash.text.CSMSettings;
@@ -44,6 +46,9 @@ package states
 		private var _cops:FlxGroup;
 		/** All actors are stored in this group, player included */
 		private var _actors:FlxGroup;
+		/** Hallucinations blocking the player */
+		private var _hallucinations:FlxGroup;
+		private var _spawnedHallucinations:Array;
 
 		/** Buildings*/
 		private var _buildings:Array;
@@ -55,10 +60,14 @@ package states
 		private var _bass:FlxSound;
 		private var _music:FlxSound;
 		
+		private var _randomMachine:RandomMachine;
+		
 		public function PlayState() {
 		}
 
 		public override function create() : void {
+			_randomMachine = new RandomMachine(Math.random());
+			
 			// The input controller
 			_inputController = new KeyboardController();
 
@@ -73,7 +82,6 @@ package states
 			_buildingBasements = new FlxGroup();
 			_buildingRoofs = new FlxGroup();
 			
-			var randomMachine:RandomMachine = new RandomMachine(0 /*Math.random() * 5000000*/);
 			var buildingSprites:Vector.<Class> = new Vector.<Class>();
 			buildingSprites.push(Assets.BUILDING_1);
 			buildingSprites.push(Assets.BUILDING_2);
@@ -101,9 +109,8 @@ package states
 						}
 						// Random building sprite
 						else {
-							sprite = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
+							sprite = buildingSprites[_randomMachine.nextMax(buildingSprites.length)];
 						}
-						
 						_buildings[row][col] = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
 					}
 				}
@@ -112,6 +119,8 @@ package states
 			_actors = new FlxGroup();
 			_actors.add(_player);
 			_actors.add(_cops);
+			
+			_hallucinations = new FlxGroup();
 			
 			// Add elements to the states
 			// The input controller first
@@ -123,6 +132,7 @@ package states
 			add(_buildingBasements);
 			// The actors (player, cops, unicorns...)
 			add(_actors);
+			add(_hallucinations);
 
 			// And the buildings roofs
 			add(_buildingRoofs);
@@ -167,6 +177,17 @@ package states
 			// Make the camera follow the player
 			FlxG.camera.follow(_player);
 			_backgroundTilemap.follow();
+			
+			// Create the hallucination array
+			_spawnedHallucinations = new Array();
+			var j:int;
+			for (i = 0;  i < _map.nRows; i++) {
+				_spawnedHallucinations[i] = new Array();
+				
+				for (j = 0;  j < _map.nCols; j++) {
+					_spawnedHallucinations[i][j] = null;
+				}
+			}
 		}
 		
 		public function stopLevel() : void {
@@ -234,6 +255,20 @@ package states
 					++i;
 				}
 			}
+			
+			// Only the player can collide with it's hallicinations
+			FlxG.collide(_player, _hallucinations);
+			
+			// Hallicination array update
+			var x:int;
+			var y:int = 0;
+			for (y = 0; y < _map.nCols; y++) {
+				for (x = 0; x < _map.nRows; x++) {
+					if (_spawnedHallucinations[x][y] != null && !(_spawnedHallucinations[x][y] as FlxObject).alive) {
+						_spawnedHallucinations[x][y] = null;
+					}
+				}
+			}
 		}
 
 		private function getBuilding(i:Number, j:Number) : Building {
@@ -260,6 +295,48 @@ package states
 			var building:FlxSprite = roof as FlxSprite;
 			if (building != null) {
 				building.alpha = Config.buildingAlpha;
+			}
+		}
+		
+		public function spawnHallucination() : void {
+			// Get a random road tile
+			var tx:int = -1;
+			var ty:int = -1;
+			
+			// Fill an array of possible spawn tiles
+			var possibleTiles:Vector.<FlxPoint> = new Vector.<FlxPoint>();
+			
+			var distance:int = 2;
+			var playerMidPoint:FlxPoint = _player.getMidpoint();
+			var tile:Object = Utils.getTile(playerMidPoint.x, playerMidPoint.y);
+			var startX:int = Math.max(0, tile.j - distance);
+			var startY:int = Math.max(0, tile.i - distance);
+			var endX:int = Math.min(_map.nCols, tile.j + distance + 1);
+			var endY:int = Math.min(_map.nRows, tile.i + distance + 1);
+			for (var i:int = startY; i <  endY; i++ ) {
+				for (var j:int = startX; j <  endX; j++ ) {
+					if (_map.at(i, j) == 0 && (i != tile.i || j != tile.j) && _spawnedHallucinations[i][j] == null) {
+						possibleTiles.push(new FlxPoint(j, i));
+					}
+				}
+			}
+			
+			if(possibleTiles.length > 0 ) {
+				// Spawn a random hallucination
+				var randomTile:FlxPoint = possibleTiles[_randomMachine.nextMax(possibleTiles.length)];
+				trace("Spawned at : [" +randomTile.x + "," + randomTile.y + "]");
+				var x:int = randomTile.x * Config.tileSize;
+				var y:int = randomTile.y * Config.tileSize;
+				var hallucination:FlxSprite;
+				
+				if (_randomMachine.nextMinMax(0,100) > 50) {
+					hallucination = new ElephantHallucination(x, y);
+				} else {
+					hallucination = new GhostAnimation(x, y);
+				}
+				
+				_spawnedHallucinations[randomTile.y][randomTile.x] = hallucination;
+				_hallucinations.add(hallucination);
 			}
 		}
 		

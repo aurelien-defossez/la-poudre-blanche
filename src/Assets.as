@@ -12,8 +12,10 @@ package
 		[Embed(source = "/gfx/roads.png")] public static const ROAD_TILESET:Class;
 		[Embed(source = "/gfx/ponycorn.png")] public static const PONYCORN:Class; 
 		[Embed(source = "/gfx/bombeensemble.png")] public static const NINJA_ANIMATION:Class;
-		[Embed(source = "/gfx/fantomeensemble.png")] public static const GHOST_ANIMATION:Class;
-		[Embed(source = "/gfx/elephant.png")] public static const ELEPHANT:Class;
+		[Embed(source = "/gfx/fantomes.png")] public static const GHOST_ANIMATION:Class;
+		[Embed(source = "/gfx/elephantgd.png")] public static const ELEPHANT:Class;
+		[Embed(source = "/gfx/hudfond.png")] public static const HUD:Class; 
+		[Embed(source = "/gfx/hudnez.png")] public static const HUD_NOSE:Class; 
 		
 		// Buildings
 		[Embed(source = "/gfx/buildings/sol.png")] public static const GROUND:Class;
@@ -37,6 +39,11 @@ package
 		[Embed(source = "/audio/Musics/nightclub_sup.mp3")] public static const MUSIC_SUP:Class;
 		[Embed(source = "/audio/Musics/nightclub_tutti.mp3")] public static const MUSIC_TUTTI:Class;
 
+		// Font
+		[Embed(source = "/erasdust.ttf", fontFamily = "EraserDust", embedAsCFF = "false")] public static const FONT_DEF:Class;
+		public static var FONT:String = "EraserDust";
+		
+		
 		// Actors tilesheets data
 		public static const DIRECTIONS:Object = {
 			south: 0,
