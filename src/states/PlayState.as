@@ -58,7 +58,7 @@ package states
 			_inputController = new KeyboardController();
 
 			// The player
-			_player = new Player(_inputController, this, 1.5, 3.5);
+			_player = new Player(_inputController, this);
 			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
 			
@@ -73,12 +73,15 @@ package states
 			buildingSprites.push(Assets.BUILDING_1);
 			buildingSprites.push(Assets.BUILDING_2);
 			buildingSprites.push(Assets.HOUSE_1);
+			buildingSprites.push(Assets.GARDEN);
+			buildingSprites.push(Assets.SKYLINE_GREEN);
+			
 			//buildingSprites.push(Assets.HOUSE_LEFT);
 			buildingSprites.push(Assets.HOUSE_MIDDLE);
 			//buildingSprites.push(Assets.HOUSE_RIGHT);
-			buildingSprites.push(Assets.GARDEN);
-			buildingSprites.push(Assets.SKYLINE_GREEN);
-			buildingSprites.push(Assets.SKYLINE_PURPLE);
+			
+			// Temporary: Purple skyline is the disco club
+			//buildingSprites.push(Assets.SKYLINE_PURPLE);
 
 			_buildings = new Array();
 			
@@ -87,7 +90,14 @@ package states
 				
 				for (var col:int = 0; col < _map.nCols; col++ ) {
 					if (_map.at(row, col) == 1) {
-						var sprite:Class = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
+						var sprite:Class;
+						
+						if (row == _map.target.x && col == _map.target.y) {
+							sprite = Assets.SKYLINE_PURPLE;
+						} else {
+							sprite = buildingSprites[randomMachine.nextMax(buildingSprites.length)];
+						}
+						
 						_buildings[row][col] = new Building(col, row, _buildingBasements, _buildingRoofs, sprite);
 					}
 				}
@@ -120,7 +130,7 @@ package states
 		
 		public function loadLevel(mapId:int) : void {
 			_map = new Map();
-			_map.load(Config.levels[mapId].map);
+			_map.load(Config.levels[mapId]);
 			
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
@@ -129,6 +139,10 @@ package states
 			// Collision tilemap
 			_collideMap = new FlxTilemap();
 			_collideMap.loadMap(_map.collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
+			
+			// Move player
+			_player.x = (_map.player.x + 0.3) * Config.tileSize
+			_player.y = (_map.player.y + 0.25) * Config.tileSize
 			
 			// Apply maps
 			_player.collideMap = _collideMap;
