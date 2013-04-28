@@ -54,29 +54,15 @@ package states
 		}
 
 		public override function create() : void {
-			
 			// The input controller
 			_inputController = new KeyboardController();
 
-			// TODO Build this string map procedurally
-			_map = new Map(11, 14);
-			
-			// Background tilemap
-			_backgroundTilemap = new FlxTilemap();
-			_backgroundTilemap.loadMap(_map.getRoadMap(), Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
-
-			// Collision tilemap
-			_collideMap = new FlxTilemap();
-			_collideMap.loadMap(_map.getCollisionMap(), Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
-
 			// The player
-			_player = new Player(_collideMap, _inputController, this, 1.5, 3.5);
+			_player = new Player(_inputController, this, 1.5, 3.5);
 			// The bad cop (or is it the good one?)
-			_cop = new Cop(_collideMap, _player);
-
-			// Make the camera follow the player
-			FlxG.camera.follow(_player);
-			_backgroundTilemap.follow();
+			_cop = new Cop(_player);
+			
+			loadLevel(new Map(11, 14));
 
 			// Create the buildings
 			_buildingBasements = new FlxGroup();
@@ -133,6 +119,26 @@ package states
 			
 			// HUD
 			add(new Hud(_player));
+		}
+		
+		public function loadLevel(map:Map) : void {
+			_map = map;
+			
+			// Background tilemap
+			_backgroundTilemap = new FlxTilemap();
+			_backgroundTilemap.loadMap(_map.getRoadMap(), Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
+
+			// Collision tilemap
+			_collideMap = new FlxTilemap();
+			_collideMap.loadMap(_map.getCollisionMap(), Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
+			
+			// Apply maps
+			_player.collideMap = _collideMap;
+			_cop.collideMap = _collideMap;
+
+			// Make the camera follow the player
+			FlxG.camera.follow(_player);
+			_backgroundTilemap.follow();
 		}
 
 		public override function update() : void {

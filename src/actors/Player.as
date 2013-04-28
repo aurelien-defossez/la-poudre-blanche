@@ -22,20 +22,21 @@ package actors {
 		private var _runTimer:Number;
 		/** Each drug consumption increase this counter : use it to make crazy things */
 		private var _intoxication:int;
+		
+		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
 		public function get drugCounter() : int { return _drugCounter; };
 		public function set drugCounter(value:int) : void { _drugCounter = value; };
 
 		public function get runTimer() : Number { return _runTimer; };
 
-		public function Player(collideMap:FlxTilemap, inputController:Controller, state:PlayState, i:Number, j:Number) {
+		public function Player(inputController:Controller, state:PlayState, i:Number, j:Number) {
 			super(j * Config.tileSize, i * Config.tileSize);
 
 			_state = state;
 			_drugCounter = Config.baseDrugCounter;
 			_intoxication = 0;
 			_runTimer = 0;
-			_collideMap = collideMap;
 			_inputController = inputController;
 
 			loadGraphic(Assets.HEENOK_TILESET, true, false, 64, 64)

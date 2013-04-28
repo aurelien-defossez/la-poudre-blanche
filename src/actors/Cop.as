@@ -18,9 +18,10 @@ package actors {
 		private var lastPathUpdate:Number = 2;
 
 		private var _bombTimer:Number;
+		
+		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
-		public function Cop(collideMap:FlxTilemap, player:Player) {
-			_collideMap = collideMap;
+		public function Cop(player:Player) {
 			_player = player
 
 			super(1.5 * Config.tileSize, 1.5 * Config.tileSize);
