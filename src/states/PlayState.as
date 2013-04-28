@@ -62,14 +62,18 @@ package states
 		private var _music:FlxSound;
 		private var _policeSound:FlxSound;
 
+		/** The current level */
+		private var _currentLevel:Number = 0;
+
 		private var _randomMachine:RandomMachine;
 
-		public function PlayState() {
+		public function PlayState(level:Number) {
+			_currentLevel = level;
 		}
 
 		public override function create() : void {
 			FlxG.mouse.hide();
-			
+
 			_randomMachine = new RandomMachine(Math.random());
 
 			// The input controller
@@ -78,7 +82,7 @@ package states
 			// The player
 			_player = new Player(_inputController, this);
 
-			loadLevel(0);
+			loadLevel(_currentLevel);
 
 			// Create the buildings
 			_buildingBasements = new FlxGroup();
@@ -229,9 +233,9 @@ package states
 
 			if (changedTile) {
 				var playerPosition:Object = _player.getTileIndex();
-				
+
 				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
-					trace("The end");
+					FlxG.switchState(new PlayState(_currentLevel + 1));
 				}
 
 				// Fade tiles to the left (and the current tile)
@@ -287,7 +291,7 @@ package states
 				var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
 				minDistance = Math.min(distance, minDistance);
 			}
-			
+
 			if (minDistance < Config.copSoundRadius) {
 				_policeSound.volume = 1;
 			} else {
