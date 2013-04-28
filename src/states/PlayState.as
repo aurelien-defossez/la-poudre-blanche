@@ -122,11 +122,11 @@ package states
 			
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
-			_backgroundTilemap.loadMap(_map.getRoadMap(), Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
+			_backgroundTilemap.loadMap(_map.roadMap, Assets.ROAD_TILESET, Config.tileSize, Config.tileSize, FlxTilemap.AUTO, 0, 1, 2);
 
 			// Collision tilemap
 			_collideMap = new FlxTilemap();
-			_collideMap.loadMap(_map.getCollisionMap(), Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
+			_collideMap.loadMap(_map.collisionMap, Assets.DEBUG_TILESET, Config.tileSize, Config.tileSize);
 			
 			// Apply maps
 			_player.collideMap = _collideMap;
