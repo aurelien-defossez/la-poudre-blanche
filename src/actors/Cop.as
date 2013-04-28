@@ -5,6 +5,7 @@ package actors {
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
+	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 
 	import maps.Map;
@@ -24,7 +25,7 @@ package actors {
 		private var notChasingPlayerSince:Number = 0;
 
 		private var _bombTimer:Number;
-		private var _currentDirection:uint;
+		private var _currentDirection:uint = FlxObject.RIGHT;
 
 		public function get currentDirection() : uint { return _currentDirection; };
 
@@ -82,50 +83,61 @@ package actors {
 						}
 					}
 				}
-			}
 
-			if (chasingPlayer) {
-				// Stop cop when end of path is reached
 				if (pathSpeed == 0) {
+					// Stop cop when end of path is reached
 					stopMoving();
-					chasingPlayer = false;
+					var goToTile:FlxPoint;
 
-					// keep walking in the current direction to the next intersection or wall
-					var goToTile:FlxPoint = getNextCrossOrWallInDirection(_currentDirection);
-					var tile:FlxPoint = Utils.getWorldMidpoint(goToTile.x, goToTile.y);
+					if (chasingPlayer) {
+						chasingPlayer = false;
+
+						// find the next destination
+						goToTile = getNextCrossOrWallInDirection(_currentDirection);
+					}
+					else {
+						// not chasing a player and not moving
+						// start moving in a random direction
+						var directions:Array = new Array(
+							FlxObject.UP,
+							FlxObject.DOWN,
+							FlxObject.LEFT,
+							FlxObject.RIGHT
+						);
+						var dir:uint = Math.floor(Math.random() * 4);
+
+						// find the next destination
+						goToTile = getNextCrossOrWallInDirection(directions[dir]);
+					}
+
+					// go to the next intersection or wall
+					var tile:FlxPoint = Utils.getWorldMidpoint(goToTile.y, goToTile.x);
 					copPath = _collideMap.findPath(getMidpoint(), tile);
 					if (copPath) {
 						followPath(copPath);
 					}
 				}
 			}
-			else {
-				if (pathSpeed == 0) {
-					stopMoving();
-
-					// start moving
-					// if the cop is at a cross, go somewhere randomly
-					// dir = random(0, 4)
-					// if block in closest dir, again
-					// go to next intersection or wall
-				}
-			}
 
 			if (velocity.x != 0 || velocity.y != 0) {
+				var animationMovement:String = "run";
+				if (chasingPlayer) {
+					animationMovement = "run";
+				}
 				if (pathAngle > 45 && pathAngle <= 135) {
-					play("run-east");
+					play(animationMovement + "-east");
 					_currentDirection = FlxObject.RIGHT;
 				}
 				else if (pathAngle <= -45 && pathAngle > -135) {
-					play("run-west");
+					play(animationMovement + "-west");
 					_currentDirection = FlxObject.LEFT;
 				}
 				else if (pathAngle > -45 && pathAngle <= 45) {
-					play("run-north");
+					play(animationMovement + "-north");
 					_currentDirection = FlxObject.UP;
 				}
 				else if (pathAngle > 135 || pathAngle <= -135) {
-					play("run-south");
+					play(animationMovement + "-south");
 					_currentDirection = FlxObject.DOWN;
 				}
 			}
@@ -172,28 +184,38 @@ package actors {
 			var found:Boolean = false;
 
 			while (!found) {
-				var next:FlxPoint = start + directionVec;
-				var tile:Number = _map.at(start.x, start.y);
+				var tile:Number = _map.at(start.y, start.x);
 
-				if (tile == 0) {
+				if (tile) {
 					finalPoint = start;
 					found = true;
 					continue;
 				}
 
+				var next:FlxPoint = new FlxPoint(
+					start.x + directionVec.x,
+					start.y + directionVec.y
+				);
+
+				var nextTile:Number = _map.at(next.y, next.x);
+				if (nextTile) {
+					finalPoint = start;
+					found = true;
+					continue;
+				}
 				var adjTile1:Number;
 				var adjTile2:Number;
 
 				if (directionVec.x == 0) {
-					adjTile1 = _map.at(next.x + 1, next.y);
-					adjTile2 = _map.at(next.x - 1, next.y);
+					adjTile1 = _map.at(next.y, next.x + 1);
+					adjTile2 = _map.at(next.y, next.x - 1);
 				}
 				else if (directionVec.y == 0) {
-					adjTile1 = _map.at(next.x, next.y + 1);
-					adjTile2 = _map.at(next.x, next.y - 1);
+					adjTile1 = _map.at(next.y + 1, next.x);
+					adjTile2 = _map.at(next.y - 1, next.x);
 				}
 
-				if (adjTile1 || adjTile2) {
+				if (!adjTile1 || !adjTile2) {
 					finalPoint = next;
 					found = true;
 					continue;

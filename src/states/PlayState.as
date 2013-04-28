@@ -28,6 +28,7 @@ package states
 	 * @author Alex Frêne
 	 */
 	public class PlayState extends FlxState {
+
 		/** The road background tilemap */
 		private var _backgroundTilemap:FlxTilemap;
 		/** The collision tilemap (building basements) */
