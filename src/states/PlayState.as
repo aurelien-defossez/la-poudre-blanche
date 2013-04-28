@@ -62,7 +62,7 @@ package states
 			// The bad cop (or is it the good one?)
 			_cop = new Cop(_collideMap, _player);
 			
-			loadLevel(new Map(11, 14));
+			loadLevel(0);
 
 			// Create the buildings
 			_buildingBasements = new FlxGroup();
@@ -118,8 +118,9 @@ package states
 			add(new Hud(_player));
 		}
 		
-		public function loadLevel(map:Map) : void {
-			_map = map;
+		public function loadLevel(mapId:int) : void {
+			_map = new Map();
+			_map.load(Config.levels[mapId].map);
 			
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();

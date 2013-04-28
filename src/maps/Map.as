@@ -17,7 +17,27 @@ package maps
 		public function get collisionMap() : String { return _collisionMap; };
 		public function get roadMap() : String { return _roadMap; };
 		
-		public function Map(nRows:int, nCols:int) {
+		public function Map();
+		
+		public function load(roadMap:String) : void {
+			_map = new Array();
+			_roadMap = roadMap;
+			
+			var rows:Array = roadMap.split("\n");
+			_nRows = rows.length;
+			for (var i:int = 0; i < _nRows; i++) {
+				_map[i] = rows[i].split(",");
+				_nCols = _map[i].length;
+				
+				for (var j:int = 0; j < _nCols; j++) {
+					_map[i][j] = (_map[i][j] == 0) ? 1 : 0;
+				}
+			}
+			
+			computeCollisionMap();
+		}
+		
+		public function generate(nRows:int, nCols:int) : void {
 			_map = new Array();
 			_nRows = nRows;
 			_nCols = nCols;
@@ -71,7 +91,7 @@ package maps
 		public function computeCollisionMap() : void {
 			var rows:Array = new Array();
 			
-			for (var i:int = 0; i < nRows; i++ ) {
+			for (var i:int = 0; i < _nRows; i++) {
 				rows.push(_map[i].join(","));
 			}
 			
@@ -81,8 +101,8 @@ package maps
 		public function computeRoadMap() : void {
 			var buffer:String = "";
 			
-			for (var i:int = 0; i < nRows; i++ ) {
-				for (var j:int = 0; j < nCols; j++ ) {
+			for (var i:int = 0; i < nRows; i++) {
+				for (var j:int = 0; j < nCols; j++) {
 					buffer += ((_map[i][j] == 0) ? 1 : 0) + ",";
 				}
 				buffer += "\n";
