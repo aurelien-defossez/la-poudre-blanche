@@ -13,7 +13,7 @@ package
 	public class Main extends FlxGame {
 		
 		public function Main() : void {
-			super(800, 600, PlayState, 1);
+			super(800, 600, MenuState, 1);
 		}
 	}
 	

@@ -16,6 +16,8 @@ package
 		[Embed(source = "/gfx/elephantgd.png")] public static const ELEPHANT:Class;
 		[Embed(source = "/gfx/hudfond.png")] public static const HUD:Class; 
 		[Embed(source = "/gfx/hudnez.png")] public static const HUD_NOSE:Class; 
+		[Embed(source = "/gfx/menu-starttitre.png")] public static const START_MENU:Class;  
+		[Embed(source = "/gfx/menu-startponeyarcenciel.png")] public static const MENU_CURSOR:Class;
 		
 		// Buildings
 		[Embed(source = "/gfx/buildings/sol.png")] public static const GROUND:Class;

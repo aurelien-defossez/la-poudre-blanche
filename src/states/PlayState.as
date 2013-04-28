@@ -67,6 +67,8 @@ package states
 		}
 
 		public override function create() : void {
+			FlxG.mouse.hide();
+			
 			_randomMachine = new RandomMachine(Math.random());
 			
 			// The input controller
