@@ -74,8 +74,6 @@ package states
 
 			// The player
 			_player = new Player(_inputController, this);
-			// The bad cop (or is it the good one?)
-			_cop = new Cop(_collideMap, _player, 1.5 * Config.tileSize, 1.5 * Config.tileSize);
 
 			loadLevel(0);
 
@@ -160,7 +158,7 @@ package states
 			// Create chickens
 			_cops = new FlxGroup();
 			for (var i:Number = 0; i < _map.cops.length; i++) {
-				var cop:Cop = new Cop(_collideMap, _player);
+				var cop:Cop = new Cop(_collideMap, _map, _player);
 				cop.x = (_map.cops[i].y + 0.3) * Config.tileSize;
 				cop.y = (_map.cops[i].x + 0.25) * Config.tileSize;
 				_cops.add(cop);

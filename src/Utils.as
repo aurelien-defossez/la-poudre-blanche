@@ -1,5 +1,7 @@
-package  
+package
 {
+	import org.flixel.FlxPoint;
+
 	/**
 	 * ...
 	 * @author Aurélien Defossez
@@ -13,6 +15,13 @@ package
 				i: Math.floor(y / Config.tileSize),
 				j: Math.floor(x / Config.tileSize)
 			}
+		}
+
+		public static function getWorldMidpoint(i:Number, j:Number) : FlxPoint {
+			return new FlxPoint(
+				j * Config.tileSize + Config.tileSize / 2,
+				i * Config.tileSize + Config.tileSize / 2
+			);
 		}
 	}
 

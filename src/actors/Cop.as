@@ -7,12 +7,14 @@ package actors {
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
 
+	import maps.Map;
+
 	public class Cop extends FlxSprite {
 
 		public var direction:FlxPoint;
-		public var patrolOrigin:FlxPoint;
 
 		private var _collideMap:FlxTilemap;
+		private var _map:Map;
 		private var _player:Player;
 		private var _currentAnimation:String;
 
@@ -26,12 +28,11 @@ package actors {
 
 		public function get currentDirection() : uint { return _currentDirection; };
 
-		public function Cop(collideMap:FlxTilemap, player:Player, x:Number, y:Number) {
+		public function Cop(collideMap:FlxTilemap, map:Map, player:Player) {
 			_player = player;
 			_collideMap = collideMap;
+			_map = map;
 
-			super(x, y);
-			patrolOrigin = new FlxPoint(x, y);
 			_bombTimer = 0;
 
 			loadGraphic(Assets.GERARD_TILESET, true, false, 64, 64)
@@ -58,6 +59,7 @@ package actors {
 				_bombTimer -= FlxG.elapsed;
 
 				stopMoving();
+				chasingPlayer = false;
 			}
 			else {
 				lastPathUpdate += FlxG.elapsed;
@@ -80,10 +82,32 @@ package actors {
 						}
 					}
 				}
+			}
 
+			if (chasingPlayer) {
 				// Stop cop when end of path is reached
 				if (pathSpeed == 0) {
 					stopMoving();
+					chasingPlayer = false;
+
+					// keep walking in the current direction to the next intersection or wall
+					var goToTile:FlxPoint = getNextCrossOrWallInDirection(_currentDirection);
+					var tile:FlxPoint = Utils.getWorldMidpoint(goToTile.x, goToTile.y);
+					copPath = _collideMap.findPath(getMidpoint(), tile);
+					if (copPath) {
+						followPath(copPath);
+					}
+				}
+			}
+			else {
+				if (pathSpeed == 0) {
+					stopMoving();
+
+					// start moving
+					// if the cop is at a cross, go somewhere randomly
+					// dir = random(0, 4)
+					// if block in closest dir, again
+					// go to next intersection or wall
 				}
 			}
 
@@ -106,21 +130,79 @@ package actors {
 				}
 			}
 			else {
-				if (pathAngle > 45 && pathAngle <= 135) {
+				if (_currentDirection == FlxObject.RIGHT) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
 				}
-				else if (pathAngle <= -45 && pathAngle > -135) {
+				else if (_currentDirection == FlxObject.LEFT) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
 				}
-				else if (pathAngle > -45 && pathAngle <= 45) {
+				else if (_currentDirection == FlxObject.UP) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
 				}
-				else if (pathAngle > 135 || pathAngle <= -135) {
+				else if (_currentDirection == FlxObject.DOWN) {
 					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
 				}
 			}
 
 			super.update();
+		}
+
+		public function getNextCrossOrWallInDirection(dir:uint) : FlxPoint {
+			var start:FlxPoint = getMidpoint();
+			var startTile:Object = Utils.getTile(start.x, start.y);
+			start.x = startTile.j;
+			start.y = startTile.i;
+
+			var directionVec:FlxPoint = new FlxPoint(0, 0);
+
+			if (dir == FlxObject.UP) {
+				directionVec.y = -1;
+			}
+			if (dir == FlxObject.DOWN) {
+				directionVec.y = 1;
+			}
+			if (dir == FlxObject.LEFT) {
+				directionVec.x = -1;
+			}
+			if (dir == FlxObject.RIGHT) {
+				directionVec.x = 1;
+			}
+
+			var finalPoint:FlxPoint = null;
+			var found:Boolean = false;
+
+			while (!found) {
+				var next:FlxPoint = start + directionVec;
+				var tile:Number = _map.at(start.x, start.y);
+
+				if (tile == 0) {
+					finalPoint = start;
+					found = true;
+					continue;
+				}
+
+				var adjTile1:Number;
+				var adjTile2:Number;
+
+				if (directionVec.x == 0) {
+					adjTile1 = _map.at(next.x + 1, next.y);
+					adjTile2 = _map.at(next.x - 1, next.y);
+				}
+				else if (directionVec.y == 0) {
+					adjTile1 = _map.at(next.x, next.y + 1);
+					adjTile2 = _map.at(next.x, next.y - 1);
+				}
+
+				if (adjTile1 || adjTile2) {
+					finalPoint = next;
+					found = true;
+					continue;
+				}
+
+				start = next;
+			}
+
+			return finalPoint;
 		}
 
 		public function stopMoving() : void {
