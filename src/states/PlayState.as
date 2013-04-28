@@ -52,6 +52,7 @@ package states
 		private var _inputController:KeyboardController;
 		
 		/** The sounds */
+		private var _bass:FlxSound;
 		private var _music:FlxSound;
 		
 		public function PlayState() {
@@ -154,7 +155,8 @@ package states
 			_cop.collideMap = _collideMap;
 			
 			// Play music
-			_music = FlxG.loadSound(Assets.MUSIC_TUTTI, 0, true, false, true);
+			_bass = FlxG.loadSound(Assets.MUSIC_BASS, 0, true, false, true);
+			_music = FlxG.loadSound(Assets.MUSIC_SUP, 0, true, false, true);
 
 			// Make the camera follow the player
 			FlxG.camera.follow(_player);
@@ -162,6 +164,7 @@ package states
 		}
 		
 		public function stopLevel() : void {
+			_bass.stop();
 			_music.stop();
 		}
 
@@ -173,7 +176,9 @@ package states
 			var changedTile:Boolean = _player.changedTile();
 			
 			// Update music volume
-			_music.volume = 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length);
+			var proximity:Number = Math.max(0, 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length));
+			_bass.volume = proximity;
+			_music.volume = (proximity > 0.5) ? (proximity - 0.5) * 2 : 0;
 
 			// Update buildings manually
 			for (i = 0; i < _map.nRows; i++) {

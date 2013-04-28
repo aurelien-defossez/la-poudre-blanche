@@ -51,7 +51,7 @@ package maps
 				}
 			}
 			
-			_length = Math.max(_nRows, _nCols) * Config.tileSize;
+			_length = Math.max(_nRows, _nCols) * Config.tileSize * 0.8;
 			
 			computeCollisionMap();
 		}
