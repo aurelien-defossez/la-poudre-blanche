@@ -43,6 +43,13 @@ package
 		[Embed(source = "/erasdust.ttf", fontFamily = "EraserDust", embedAsCFF = "false")] public static const FONT_DEF:Class;
 		public static var FONT:String = "EraserDust";
 		
+		// Sounds
+		[Embed(source = "/audio/SDs/snif.mp3")] public static const SNIF:Class; 
+		[Embed(source = "/audio/SDs/walk.mp3")] public static const WALK:Class;
+		[Embed(source = "/audio/SDs/plop.mp3")] public static const PLOP:Class;
+		[Embed(source = "/audio/SDs/run.mp3")] public static const RUN:Class;
+		
+		
 		
 		// Actors tilesheets data
 		public static const DIRECTIONS:Object = {

@@ -3,6 +3,7 @@ package actors {
 	import input.Controller;
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxSound;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
 	import states.PlayState;
@@ -23,6 +24,9 @@ package actors {
 		/** Each drug consumption increase this counter : use it to make crazy things */
 		private var _intoxication:int;
 
+		private var _walkSound:FlxSound;
+		private var _runSound:FlxSound;
+		
 		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
 		public function get drugCounter() : int { return _drugCounter; };
@@ -100,6 +104,7 @@ package actors {
 					_drugCounter -= Config.runPrice;
 					_runTimer += Config.runTime;
 					_state.spawnHallucination();
+					FlxG.play(Assets.SNIF);
 				}
 
 				// Ninja powder
@@ -109,6 +114,7 @@ package actors {
 					_drugCounter -= Config.ninjaPrice;
 					_state.dropBomb(x + width / 2, y + height / 2);
 					_state.spawnHallucination();
+					FlxG.play(Assets.PLOP);
 				}
 			}
 
@@ -150,6 +156,17 @@ package actors {
 			// Check for collision with buildings
 			FlxG.collide(_collideMap, this);
 
+			if (!moveThisFrame) {
+				if (_runTimer > 0 && _runSound != null) {
+					_runSound.stop();
+					_runSound.destroy();
+					_runSound = null;
+				} else if(_walkSound != null){
+					_walkSound.stop();
+					_walkSound.destroy();
+					_walkSound = null;
+				}
+			}
 			moveThisFrame = false;
 			super.update();
 		}
@@ -188,6 +205,21 @@ package actors {
 
 		public function move(): void {
 			moveThisFrame = true;
+			
+			if (_runTimer > 0) {
+				if (_runSound == null) {
+					_runSound = FlxG.play(Assets.RUN, 1, true);
+				}
+			} else {
+				if (_runSound != null) {
+					_runSound.stop();
+					_runSound.destroy();
+					_runSound = null;
+				}
+				if (_walkSound == null) {
+					_walkSound = FlxG.play(Assets.WALK, 1, true);
+				}
+			}
 		}
 	}
 }
