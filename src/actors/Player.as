@@ -160,26 +160,19 @@ package actors {
 			// which is used by the game to know which buildings to fade
 
 			if (_tileIndex == null) {
-				var center:FlxPoint = getCenter();
+				var center:FlxPoint = getMidpoint();
 				_tileIndex = Utils.getTile(center.x, center.y);
 				return true;
 			} else {
 				var previousTile:Object = {
-					x: _tileIndex.x,
-					y: _tileIndex.y
+					i: _tileIndex.i,
+					j: _tileIndex.j
 				};
 
-				_tileIndex = Utils.getTile(x, y);
-
-				return (_tileIndex.x == previousTile.x && _tileIndex.y == previousTile.y);
+				var center:FlxPoint = getMidpoint();
+				_tileIndex = Utils.getTile(center.x, center.y);
+				return (_tileIndex.i != previousTile.i || _tileIndex.j != previousTile.j);
 			}
-		}
-
-		public function getCenter() : FlxPoint {
-			return new FlxPoint(
-				x + width / 2,
-				y + height / 2
-			);
 		}
 
 		public function getTileIndex() : Object {

@@ -226,6 +226,10 @@ package states
 
 			if (changedTile) {
 				var playerPosition:Object = _player.getTileIndex();
+				
+				if (playerPosition.i == _map.targetTile.x && aaaaa.j == _map.targetTile.y) {
+					trace("The end");
+				}
 
 				// Fade tiles to the left (and the current tile)
 				i = playerPosition.i;

@@ -10,7 +10,7 @@ package actors
 	public class GhostAnimation extends Hallucination 
 	{
 		
-		public function GhostAnimation(x, y) 
+		public function GhostAnimation(x:Number, y:Number) 
 		{
 			super();
 			loadGraphic(Assets.GHOST_ANIMATION, true, false);

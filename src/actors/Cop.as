@@ -61,8 +61,8 @@ package actors {
 				velocity.y = 0;
 			} else {
 				// prepare cop start and end position
-				var pathStart:FlxPoint = getCenter();
-				var pathEnd:FlxPoint = _player.getCenter();
+				var pathStart:FlxPoint = getMidpoint();
+				var pathEnd:FlxPoint = _player.getMidpoint();
 
 				lastPathUpdate = lastPathUpdate + FlxG.elapsed;
 
