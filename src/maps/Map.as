@@ -55,6 +55,20 @@ package maps
 			_length = Math.max(_nRows, _nCols) * Config.tileSize * 0.8;
 			
 			computeCollisionMap();
+			
+			// Generate cops
+			for (i = 0; i < map.randomCops;) {
+				var position:Object = {
+					x: Math.floor(Math.random() * _nRows),
+					y: Math.floor(Math.random() * _nCols)
+				};
+				
+				if (_mapData[position.x][position.y] == 0
+					&& (Math.abs(position.x - _map.player.x) + Math.abs(position.y - _map.player.y)) > 4) {
+					map.cops.push(position);
+					i++;
+				}
+			}
 		}
 		
 		public function generate(nRows:int, nCols:int) : void {
