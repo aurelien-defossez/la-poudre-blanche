@@ -96,8 +96,6 @@ package states
 			_inputController = new KeyboardController();
 
 			// The player
-			_player = new Player(_inputController, this);
-
 			loadLevel(_currentLevel);
 
 			// Create the buildings
@@ -167,6 +165,8 @@ package states
 		public function loadLevel(mapId:int) : void {
 			_map = new Map();
 			_map.load(Config.levels[mapId]);
+			
+			_player = new Player(_inputController, this, _map);
 
 			_levelTimeLeft = Config.levels[mapId]['time'];
 

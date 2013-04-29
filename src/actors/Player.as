@@ -1,6 +1,7 @@
 package actors {
 
 	import input.Controller;
+	import maps.Map;
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSound;
@@ -17,6 +18,7 @@ package actors {
 		private var _inputController:Controller;
 		private var _tileIndex:Object;
 		private var _state:PlayState;
+		private var _map:Map;
 
 		private var _drugCounter:int
 
@@ -29,16 +31,18 @@ package actors {
 
 		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
+		public function get map() : Map { return _map; };
 		public function get drugCounter() : int { return _drugCounter; };
 		public function set drugCounter(value:int) : void { _drugCounter = value; };
 
 		public function get runTimer() : Number { return _runTimer; };
 
-		public function Player(inputController:Controller, state:PlayState) {
+		public function Player(inputController:Controller, state:PlayState, map:Map) {
 			super();
 
 			_state = state;
-			_drugCounter = Config.baseDrugCount;
+			_map = map;
+			_drugCounter = map.drug;
 			_intoxication = 0;
 			_runTimer = 0;
 			_inputController = inputController;

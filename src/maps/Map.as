@@ -22,6 +22,7 @@ package maps
 		public function get roadMap() : String { return _roadMap; };
 		public function get player() : Object { return _map.player; };
 		public function get cops() : Object { return _map.cops; };
+		public function get drug() : int { return _map.drug; };
 		public function get targetBuilding() : Object { return _map.target; };
 		public function get targetTile() : Object { return _map.targetTile; };
 		

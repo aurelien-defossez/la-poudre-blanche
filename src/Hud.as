@@ -39,16 +39,16 @@ package
 			fixItem(_background);
 
 			_nose = new FlxSprite(0, 0, Assets.HUD_NOSE);
-			_nose.x = (drugXlimit - _player.drugCounter * 150 / Config.baseDrugCount) - _nose.width / 2;
+			_nose.x = (drugXlimit - _player.drugCounter * 150 / _player.map.drug) - _nose.width / 2;
 			fixItem(_nose);
 
 			_drugProgress = new FlxSprite();
-			_drugProgress.makeGraphic(_player.drugCounter * 150 / Config.baseDrugCount, 5);
+			_drugProgress.makeGraphic(_player.drugCounter * 150 / _player.map.drug, 5);
 			_drugProgress.x = _nose.x + _nose.width / 2;
 			_drugProgress.y = 30;
 			fixItem(_drugProgress);
 
-			_drugCounter = new CustomText(70, 10, 250, Config.baseDrugCount.toString(), 24, 0xffffffff, "right");
+			_drugCounter = new CustomText(70, 10, 250, _player.map.drug.toString(), 24, 0xffffffff, "right");
 			fixItem(_drugCounter);
 
 			_scoreCounter = new CustomText(190, 38, 250, String(_score), 24, 0xffffffff, "right");
@@ -64,7 +64,7 @@ package
 		public override function update() : void {
 			super.update();
 			// Drug progress
-			var progressWidth:int = _player.drugCounter * 150 / Config.baseDrugCount;
+			var progressWidth:int = _player.drugCounter * 150 / _player.map.drug;
 
 			_noseGoalX = (drugXlimit - progressWidth) - _nose.width / 2;
 			if (_nose.x < _noseGoalX) {

@@ -12,7 +12,6 @@ package
 		// Player
 		public static const playerWalkSpeed:Number = 2;
 		public static const playerRunSpeed:Number = 4;
-		public static const baseDrugCount:int = 100;
 		public static const runPrice:int = 2;
 		public static const ninjaPrice:int = 10;
 
@@ -89,7 +88,8 @@ package
 			target: { x: 6, y: 4 },
 			cops: [],
 			randomCops: 142,
-			time: 240
+			time: 240,
+			drug: 400
 		}, {
 			map:
 				"0,0,0,0,0,0,0\n" +
@@ -117,7 +117,8 @@ package
 				{ x: 4, y: 4 }
 			],
 			time: 30, // in seconds
-			randomCops: 0
+			randomCops: 0,
+			drug: 100
 		}, {
 			map:
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
@@ -135,7 +136,8 @@ package
 			target: { x: 6, y: 11 },
 			cops: [],
 			time: 40, // in seconds
-			randomCops: 0
+			randomCops: 0,
+			drug: 150
 		}, {
 			map:
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
@@ -158,7 +160,8 @@ package
 			target: { x: 9, y: 8 },
 			cops: [],
 			time: 60, // in seconds
-			randomCops: 0
+			randomCops: 0,
+			drug: 300
 		}];
 		
 		public static const levelMax:Number = levels.length;
