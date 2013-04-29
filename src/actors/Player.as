@@ -26,7 +26,7 @@ package actors {
 
 		private var _walkSound:FlxSound;
 		private var _runSound:FlxSound;
-		
+
 		public function set collideMap(value:FlxTilemap) : void { _collideMap = value; };
 
 		public function get drugCounter() : int { return _drugCounter; };
@@ -43,7 +43,12 @@ package actors {
 			_runTimer = 0;
 			_inputController = inputController;
 
-			loadGraphic(Assets.HEENOK_TILESET, true, false, 64, 64)
+			loadGraphic(Assets.HEENOK_TILESET, true, false, 64, 64);
+
+			// Change the player's hit box
+			height = 25;
+			width = 50;
+			offset = new FlxPoint((64 - width) / 2, 64 - height);
 
 			direction = new FlxPoint(1, 0);
 			moveThisFrame = false;
@@ -68,7 +73,7 @@ package actors {
 			if (_runTimer > 0) {
 				_runTimer -= FlxG.elapsed;
 				speed = Config.playerRunSpeed;
-				
+
 				if (_runTimer <= 0) {
 					_runTimer = 0;
 					_state.stopFadeSounds();
@@ -150,7 +155,7 @@ package actors {
 			moveThisFrame = false;
 			super.update();
 		}
-		
+
 		public function stop() : void {
 			if (_runSound != null) {
 				_runSound.stop();
@@ -161,7 +166,7 @@ package actors {
 				_walkSound.destroy();
 				_walkSound = null;
 			}
-			
+
 			if (direction.x == 1) {
 				frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
 			}
@@ -181,7 +186,7 @@ package actors {
 
 		public function changedTile() : Boolean {
 			var center:FlxPoint;
-			
+
 			// Do not call this method in update, because it returns a boolean
 			// telling if the player has changed tile since the last update,
 			// which is used by the game to know which buildings to fade
@@ -208,7 +213,7 @@ package actors {
 
 		public function move(): void {
 			moveThisFrame = true;
-			
+
 			if (_runTimer > 0) {
 				if (_runSound == null) {
 					_runSound = FlxG.play(Assets.RUN, Config.RUN_VOLUME, true);
