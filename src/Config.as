@@ -25,7 +25,7 @@ package
 		// Drug and powers
 		public static const runTime:Number = 3;
 		public static const runIntox:Number = 1;
-		public static const ninjaBombTime:Number = 4;
+		public static const ninjaBombTime:Number = 3;
 		public static const ninjaBombIntox:Number = 2;
 		public static const ninjaBombRadius:Number = 200;
 		public static const ponycornAlphaSpeed:Number = 0.02;

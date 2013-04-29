@@ -411,7 +411,6 @@ package states
 			if(possibleTiles.length > 0 ) {
 				// Spawn a random hallucination
 				var randomTile:FlxPoint = possibleTiles[_randomMachine.nextMax(possibleTiles.length)];
-				trace("Spawned at : [" +randomTile.x + "," + randomTile.y + "]");
 				var x:int = randomTile.x * Config.tileSize;
 				var y:int = randomTile.y * Config.tileSize;
 				var hallucination:FlxSprite;
