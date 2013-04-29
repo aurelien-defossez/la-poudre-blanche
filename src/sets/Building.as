@@ -44,15 +44,8 @@ package sets
 			data.copyPixels(tempSprite.pixels, new Rectangle(0, 0, Config.tileSize, _roof.height), new Point());
 			_roof.pixels = data;
 			
-			// The ground
-			var ground:FlxSprite = new FlxSprite(_roof.x, _roof.y, Assets.GROUND);
-			
-			basementGroup.add(ground);
 			basementGroup.add(_basement);
 			roofGroup.add(_roof);
-			
-			// Add the roof to the group to test collision with player (line of sight)
-			add(_roof);
 		}
 		
 		public override function update() : void {

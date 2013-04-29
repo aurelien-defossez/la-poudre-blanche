@@ -21,7 +21,6 @@ package
 		[Embed(source = "/gfx/menu-title.png")] public static const MENU_TITLE:Class;
 
 		// Buildings
-		[Embed(source = "/gfx/buildings/sol.png")] public static const GROUND:Class;
 		[Embed(source = "/gfx/buildings/immeuble_gd.png")] public static const BUILDING_1:Class;
 		[Embed(source = "/gfx/buildings/immeuble_pt.png")] public static const BUILDING_2:Class;
 		[Embed(source = "/gfx/buildings/maison.png")] public static const HOUSE_1:Class;
