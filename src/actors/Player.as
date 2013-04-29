@@ -104,17 +104,16 @@ package actors {
 					_drugCounter -= Config.runPrice;
 					_runTimer += Config.runTime;
 					_state.spawnHallucination();
-					FlxG.play(Assets.SNIF);
+					FlxG.play(Assets.SNIF, Config.SNIF_VOLUME);
 				}
 
 				// Ninja powder
-				if (_inputController.actionB && _drugCounter >= Config.ninjaPrice)
-				{
+				if (_inputController.actionB && _drugCounter >= Config.ninjaPrice) {
 					_intoxication += Config.ninjaBombIntox;
 					_drugCounter -= Config.ninjaPrice;
 					_state.dropBomb(x + width / 2, y + height / 2);
 					_state.spawnHallucination();
-					FlxG.play(Assets.PLOP);
+					FlxG.play(Assets.POUF, Config.POUF_VOLUME);
 				}
 			}
 
@@ -203,7 +202,7 @@ package actors {
 			
 			if (_runTimer > 0) {
 				if (_runSound == null) {
-					_runSound = FlxG.play(Assets.RUN, 1, true);
+					_runSound = FlxG.play(Assets.RUN, Config.RUN_VOLUME, true);
 				}
 			} else {
 				if (_runSound != null) {
@@ -212,7 +211,7 @@ package actors {
 					_runSound = null;
 				}
 				if (_walkSound == null) {
-					_walkSound = FlxG.play(Assets.WALK, 1, true);
+					_walkSound = FlxG.play(Assets.WALK, Config.WALK_VOLUME, true);
 				}
 			}
 		}

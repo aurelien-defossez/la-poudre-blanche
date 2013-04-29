@@ -30,6 +30,17 @@ package
 		public static const ninjaBombRadius:Number = 140;
 		public static const ponycornAlphaSpeed:Number = 0.02;
 
+		// Sounds
+		public static const SNIF_VOLUME:Number = 1.0;
+		public static const WALK_VOLUME:Number = 1.0;
+		public static const RUN_VOLUME:Number = 1.0;
+		public static const PLOP_VOLUME:Number = 1.0;
+		public static const POUF_VOLUME:Number = 1.0;
+		public static const POLICE_VOLUME:Number = 1.0;
+		public static const THIS_IS_THE_LAW_VOLUME:Number = 1.0;
+		public static const MESSIAH_VOLUME:Number = 1.0;
+		public static const MUSIC_VOLUME:Number = 1.0;
+
 		// Levels
 		public static const levels:Array = [ {
 			map:

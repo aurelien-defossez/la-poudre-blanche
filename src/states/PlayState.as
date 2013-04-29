@@ -213,8 +213,8 @@ package states
 
 			// Update music volume
 			var proximity:Number = Math.max(0, 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length));
-			_bass.volume = proximity;
-			_music.volume = (proximity > 0.5) ? (proximity - 0.5) * 2 : 0;
+			_bass.volume = proximity * Config.MUSIC_VOLUME;
+			_music.volume = (proximity > 0.5) ? (proximity - 0.5) * 2 * Config.MUSIC_VOLUME : 0;
 
 			// Update buildings manually
 			for (i = 0; i < _map.nRows; i++) {
@@ -235,7 +235,7 @@ package states
 				var playerPosition:Object = _player.getTileIndex();
 
 				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
-					FlxG.loadSound(Assets.MESSIAH, 1, false, true, true);
+					FlxG.loadSound(Assets.MESSIAH, Config.MESSIAH_VOLUME, false, true, true);
 					
 					_currentLevel++;
 
@@ -301,13 +301,13 @@ package states
 			}
 
 			if (minDistance < Config.copSoundRadius) {
-				_policeSound.volume = 1 - minDistance / Config.copSoundRadius;
+				_policeSound.volume = (1 - minDistance / Config.copSoundRadius) * Config.POLICE_VOLUME;
 			} else {
 				_policeSound.volume = 0;
 			}
 
 			if (minDistance < Config.copCatchRadius) {
-				FlxG.loadSound(Assets.THIS_IS_THE_LAW, 1, false, true, true);
+				FlxG.loadSound(Assets.THIS_IS_THE_LAW, Config.THIS_IS_THE_LAW_VOLUME, false, true, true);
 
 				// TODO: End of game
 			}
@@ -341,6 +341,8 @@ package states
 		}
 
 		public function spawnHallucination() : void {
+			FlxG.play(Assets.PLOP, Config.PLOP_VOLUME);
+			
 			// Get a random road tile
 			var tx:int = -1;
 			var ty:int = -1;
