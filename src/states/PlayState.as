@@ -73,13 +73,13 @@ package states
 		private var _levelTime:Number;
 		private var _levelTimeLeft:Number;
 
-		private var _score:Number;
+		private var _score:Score;
 
 		private var _hud:Hud;
 
 		private var _randomMachine:RandomMachine;
 
-		public function PlayState(level:Number, score:Number=0) {
+		public function PlayState(level:Number, score:Score) {
 			_currentLevel = level;
 			_levelFinished = false;
 			_levelFinishedCounter = 0;
@@ -159,7 +159,7 @@ package states
 
 			// HUD
 			_hud = new Hud(_player);
-			_hud.score = _score;
+			_hud.score = _score.score;
 			add(_hud);
 		}
 
@@ -243,7 +243,7 @@ package states
 					_currentLevel++;
 
 					if (_currentLevel == Config.levelMax) {
-						FlxG.switchState(new EndGameState());
+						FlxG.switchState(new EndGameState(_score));
 					} else {
 						FlxG.switchState(new PlayState(_currentLevel, _score));
 					}
@@ -483,13 +483,16 @@ package states
 		}
 
 		private function computeScore() : void {
-			var levelScore:Number = _player.drugCounter * 100;
-			levelScore *= 1 + _levelTimeLeft / _levelTime;
-			if (levelScore < 0) {
-				levelScore = 0;
-			}
-			_score += levelScore;
-			_hud.score = _score;
+			var drugScore:Number = _player.drugCounter * 100;
+			var timeBonus:Number = drugScore * _levelTimeLeft / _levelTime;
+			var levelScore:Number = drugScore + timeBonus;
+
+			_score.score += levelScore;
+			_score.totalDrugSold += _player.drugCounter;
+			_score.totalTime += _levelTime - _levelTimeLeft;
+			_score.totalTimeBonus += timeBonus;
+
+			_hud.score = _score.score;
 		}
 	}
 }

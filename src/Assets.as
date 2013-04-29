@@ -21,6 +21,7 @@ package
 		[Embed(source = "/gfx/menu-title.png")] public static const MENU_TITLE:Class;
 		[Embed(source = "/gfx/tutorial.png")] public static const TUTORIAL:Class;
 		[Embed(source = "/gfx/screen-end-game.png")] public static const MENU_GAMEOVER:Class;
+		[Embed(source = "/gfx/screen-winning.png")] public static const MENU_WINNING:Class;
 
 		// Buildings
 		[Embed(source = "/gfx/buildings/immeuble_gd.png")] public static const BUILDING_1:Class;

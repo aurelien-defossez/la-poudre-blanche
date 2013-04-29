@@ -36,6 +36,10 @@ package input
 		public function movementKeyPressed(): Boolean {
 			return _left || _right || _up || down;
 		}
+
+		public function userInput(): Boolean {
+			return movementKeyPressed() || _actionA || _actionB;
+		}
 	}
 
 }

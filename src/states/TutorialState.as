@@ -30,7 +30,7 @@ package states
 
 		public override function update() : void {
 			if (FlxG.mouse.justPressed()) {
-				FlxG.switchState(new PlayState(0));
+				FlxG.switchState(new PlayState(0, new Score()));
 			}
 		}
 	}
