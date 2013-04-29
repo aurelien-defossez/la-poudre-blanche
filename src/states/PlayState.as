@@ -235,6 +235,8 @@ package states
 				var playerPosition:Object = _player.getTileIndex();
 
 				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
+					FlxG.loadSound(Assets.MESSIAH, 1, false, true, true);
+
 					if (_currentLevel + 1 > Config.levelMax) {
 						FlxG.switchState(new EndGameState());
 					}
@@ -274,10 +276,10 @@ package states
 				}
 			}
 
-			// Only the player can collide with it's hallicinations
+			// Only the player can collide with its hallicinations
 			FlxG.collide(_player, _hallucinations);
 
-			// Hallicination array update
+			// Hallucination array update
 			var x:int;
 			var y:int = 0;
 			for (y = 0; y < _map.nCols; y++) {
@@ -298,9 +300,15 @@ package states
 			}
 
 			if (minDistance < Config.copSoundRadius) {
-				_policeSound.volume = 1;
+				_policeSound.volume = 1 - minDistance / Config.copSoundRadius;
 			} else {
 				_policeSound.volume = 0;
+			}
+
+			if (minDistance < Config.copCatchRadius) {
+				FlxG.loadSound(Assets.THIS_IS_THE_LAW, 1, false, true, true);
+
+				// TODO: End of game
 			}
 		}
 

@@ -19,7 +19,8 @@ package
 		// Cops
 		public static const copPathFindingPeriod:Number = 0.5; // in seconds
 		public static const copMinSquaredDistanceToPlayerToDetect:Number = 500 * 500; // in pixels * pixels
-		public static const copSoundRadius:Number = 130;
+		public static const copSoundRadius:Number = 250;
+		public static const copCatchRadius:Number = 20;
 
 		// Drug and powers
 		public static const runTime:Number = 3;
@@ -58,6 +59,22 @@ package
 			]
 		}, {
 			map:
+				"0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
+				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
+				"0,0,0,0,0,1,0,0,0,0,1,0,0,0\n" +
+				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
+				"0,0,0,0,1,0,1,0,0,0,0,0,0,0\n" +
+				"0,1,1,1,1,0,1,1,0,1,1,1,1,0\n" +
+				"0,1,0,0,1,0,1,0,0,0,1,0,0,0\n" +
+				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
+				"0,1,0,0,0,0,1,0,0,0,0,0,1,0\n" +
+				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
+				"0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+			player: { x: 1, y: 3 },
+			target: { x: 6, y: 11 },
+			cops: []
+		}, {
+			map:
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
 				"0,0,0,0,0,0,1,1,1,0,1,1,1,0,0,0,1,0,0\n" +
 				"0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,0\n" +
@@ -77,23 +94,7 @@ package
 			player: { x: 13, y: 6 },
 			target: { x: 9, y: 8 },
 			cops: []
-		}, {
-			map:
-				"0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
-				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
-				"0,0,0,0,0,1,0,0,0,0,1,0,0,0\n" +
-				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
-				"0,0,0,0,1,0,1,0,0,0,0,0,0,0\n" +
-				"0,1,1,1,1,0,1,1,0,1,1,1,1,0\n" +
-				"0,1,0,0,1,0,1,0,0,0,1,0,0,0\n" +
-				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
-				"0,1,0,0,0,0,1,0,0,0,0,0,1,0\n" +
-				"0,1,1,1,1,1,1,1,1,1,1,1,1,0\n" +
-				"0,0,0,0,0,0,0,0,0,0,0,0,0,0",
-			player: { x: 1, y: 3 },
-			target: { x: 6, y: 11 },
-			cops: []
-		}];
+		},];
 		public static const levelMax:Number = levels.length;
 	}
 

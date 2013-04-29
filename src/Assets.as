@@ -40,20 +40,19 @@ package
 		// Musics
 		[Embed(source = "/audio/Musics/nightclub_bass.mp3")] public static const MUSIC_BASS:Class;
 		[Embed(source = "/audio/Musics/nightclub_sup.mp3")] public static const MUSIC_SUP:Class;
-		[Embed(source = "/audio/Musics/nightclub_tutti.mp3")] public static const MUSIC_TUTTI:Class;
-
-		// Font
-		[Embed(source = "/erasdust.ttf", fontFamily = "EraserDust", embedAsCFF = "false")] public static const FONT_DEF:Class;
-		public static var FONT:String = "EraserDust";
 
 		// Sounds
 		[Embed(source = "/audio/SDs/snif.mp3")] public static const SNIF:Class;
 		[Embed(source = "/audio/SDs/walk.mp3")] public static const WALK:Class;
-		[Embed(source = "/audio/SDs/plop.mp3")] public static const PLOP:Class;
 		[Embed(source = "/audio/SDs/run.mp3")] public static const RUN:Class;
+		[Embed(source = "/audio/SDs/plop.mp3")] public static const PLOP:Class;
 		[Embed(source = "/audio/SDs/police_sirens.mp3")] public static const POLICE:Class;
+		[Embed(source = "/audio/SDs/this_is_the_law.mp3")] public static const THIS_IS_THE_LAW:Class;
+		[Embed(source = "/audio/SDs/messiah.mp3")] public static const MESSIAH:Class;
 
-
+		// Font
+		[Embed(source = "/erasdust.ttf", fontFamily = "EraserDust", embedAsCFF = "false")] public static const FONT_DEF:Class;
+		public static var FONT:String = "EraserDust";
 
 		// Actors tilesheets data
 		public static const DIRECTIONS:Object = {
