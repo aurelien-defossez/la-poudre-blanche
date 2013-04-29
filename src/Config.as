@@ -25,9 +25,9 @@ package
 		// Drug and powers
 		public static const runTime:Number = 3;
 		public static const runIntox:Number = 1;
-		public static const ninjaBombTime:Number = 3;
+		public static const ninjaBombTime:Number = 4;
 		public static const ninjaBombIntox:Number = 2;
-		public static const ninjaBombRadius:Number = 140;
+		public static const ninjaBombRadius:Number = 200;
 		public static const ponycornAlphaSpeed:Number = 0.02;
 
 		// Sounds
@@ -40,6 +40,8 @@ package
 		public static const THIS_IS_THE_LAW_VOLUME:Number = 1.0;
 		public static const MESSIAH_VOLUME:Number = 1.0;
 		public static const MUSIC_VOLUME:Number = 1.0;
+		
+		public static const MESSIAH_DURATION:Number = 6.0;
 
 		// Levels
 		public static const levels:Array = [ {

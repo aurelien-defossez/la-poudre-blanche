@@ -64,11 +64,15 @@ package states
 
 		/** The current level */
 		private var _currentLevel:Number;
+		private var _levelFinished:Boolean;
+		private var _levelFinishedCounter:Number;
 
 		private var _randomMachine:RandomMachine;
 
 		public function PlayState(level:Number) {
 			_currentLevel = level;
+			_levelFinished = false;
+			_levelFinishedCounter = 0;
 		}
 
 		public override function create() : void {
@@ -205,38 +209,10 @@ package states
 		}
 
 		public override function update() : void {
-			super.update();
-
-			var i:int;
-			var j:int;
-			var changedTile:Boolean = _player.changedTile();
-
-			// Update music volume
-			var proximity:Number = Math.max(0, 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length));
-			_bass.volume = proximity * Config.MUSIC_VOLUME;
-			_music.volume = (proximity > 0.5) ? (proximity - 0.5) * 2 * Config.MUSIC_VOLUME : 0;
-
-			// Update buildings manually
-			for (i = 0; i < _map.nRows; i++) {
-				for (j = 0; j < _map.nCols; j++) {
-					var building:Building = getBuilding(i, j);
-
-					if (building) {
-						building.update();
-
-						if (changedTile) {
-							building.alpha = 1;
-						}
-					}
-				}
-			}
-
-			if (changedTile) {
-				var playerPosition:Object = _player.getTileIndex();
-
-				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
-					FlxG.loadSound(Assets.MESSIAH, Config.MESSIAH_VOLUME, false, true, true);
-					
+			if (_levelFinished) {
+				_levelFinishedCounter += FlxG.elapsed;
+				
+				if (_levelFinishedCounter >= Config.MESSIAH_DURATION) {
 					_currentLevel++;
 
 					if (_currentLevel == Config.levelMax) {
@@ -245,76 +221,114 @@ package states
 						FlxG.switchState(new PlayState(_currentLevel));
 					}
 				}
+			} else {
+				super.update();
 
-				// Fade tiles to the left (and the current tile)
-				i = playerPosition.i;
-				j = playerPosition.j;
-				while(j > 0 && getBuilding(i, j) == null) {
-					fadeTile(i, j);
-					--j;
-				}
+				var i:int;
+				var j:int;
+				var changedTile:Boolean = _player.changedTile();
 
-				// Fade tiles to the right
-				j = playerPosition.j + 1;
-				while(j < _map.nCols - 1 && getBuilding(i, j) == null) {
-					fadeTile(i, j);
-					++j;
-				}
+				// Update music volume
+				var proximity:Number = Math.max(0, 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length));
+				_bass.volume = proximity * Config.MUSIC_VOLUME;
+				_music.volume = (proximity > 0.5) ? (proximity - 0.5) * 2 * Config.MUSIC_VOLUME : 0;
 
-				// Fade tiles to the top
-				i = playerPosition.i - 1;
-				j = playerPosition.j;
-				while(i > 0 && getBuilding(i, j) == null) {
-					fadeTile(i, j);
-					--i;
-				}
+				// Update buildings manually
+				for (i = 0; i < _map.nRows; i++) {
+					for (j = 0; j < _map.nCols; j++) {
+						var building:Building = getBuilding(i, j);
 
-				// Fade tiles to the bottom
-				i = playerPosition.i + 1;
-				while (i < _map.nRows - 1 && getBuilding(i, j) == null) {
-					fadeTile(i, j);
-					++i;
-				}
-			}
+						if (building) {
+							building.update();
 
-			// Only the player can collide with its hallicinations
-			FlxG.collide(_player, _hallucinations);
-
-			// Hallucination array update
-			var x:int;
-			var y:int = 0;
-			for (y = 0; y < _map.nCols; y++) {
-				for (x = 0; x < _map.nRows; x++) {
-					if (_spawnedHallucinations[x][y] != null && !(_spawnedHallucinations[x][y] as FlxObject).alive) {
-						_spawnedHallucinations[x][y] = null;
+							if (changedTile) {
+								building.alpha = 1;
+							}
+						}
 					}
 				}
-			}
 
-			// Check for cops around the player
-			var minDistance:Number = Number.POSITIVE_INFINITY;
-			var minCatchDistance:Number = Number.POSITIVE_INFINITY;
-			for (var c:int = 0; c < _cops.length; c++) {
-				var cop:Cop = _cops.members[c];
+				if (changedTile) {
+					var playerPosition:Object = _player.getTileIndex();
 
-				var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
-				minDistance = Math.min(distance, minDistance);
-				
-				if (!cop.isUnderBombEffect && distance < minCatchDistance) {
-					minCatchDistance = distance;
+					if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
+						FlxG.loadSound(Assets.MESSIAH, Config.MESSIAH_VOLUME, false, true, true);
+						
+						_levelFinished = true;
+						_policeSound.fadeOut(0.5);
+						_player.stop();
+					}
+
+					// Fade tiles to the left (and the current tile)
+					i = playerPosition.i;
+					j = playerPosition.j;
+					while(j > 0 && getBuilding(i, j) == null) {
+						fadeTile(i, j);
+						--j;
+					}
+
+					// Fade tiles to the right
+					j = playerPosition.j + 1;
+					while(j < _map.nCols - 1 && getBuilding(i, j) == null) {
+						fadeTile(i, j);
+						++j;
+					}
+
+					// Fade tiles to the top
+					i = playerPosition.i - 1;
+					j = playerPosition.j;
+					while(i > 0 && getBuilding(i, j) == null) {
+						fadeTile(i, j);
+						--i;
+					}
+
+					// Fade tiles to the bottom
+					i = playerPosition.i + 1;
+					while (i < _map.nRows - 1 && getBuilding(i, j) == null) {
+						fadeTile(i, j);
+						++i;
+					}
 				}
-			}
 
-			if (minDistance < Config.copSoundRadius) {
-				_policeSound.volume = (1 - minDistance / Config.copSoundRadius) * Config.POLICE_VOLUME;
-			} else {
-				_policeSound.volume = 0;
-			}
+				// Only the player can collide with its hallicinations
+				FlxG.collide(_player, _hallucinations);
 
-			if (minCatchDistance < Config.copCatchRadius) {
-				FlxG.loadSound(Assets.THIS_IS_THE_LAW, Config.THIS_IS_THE_LAW_VOLUME, false, true, true);
+				// Hallucination array update
+				var x:int;
+				var y:int = 0;
+				for (y = 0; y < _map.nCols; y++) {
+					for (x = 0; x < _map.nRows; x++) {
+						if (_spawnedHallucinations[x][y] != null && !(_spawnedHallucinations[x][y] as FlxObject).alive) {
+							_spawnedHallucinations[x][y] = null;
+						}
+					}
+				}
 
-				// TODO: End of game
+				// Check for cops around the player
+				var minDistance:Number = Number.POSITIVE_INFINITY;
+				var minCatchDistance:Number = Number.POSITIVE_INFINITY;
+				for (var c:int = 0; c < _cops.length; c++) {
+					var cop:Cop = _cops.members[c];
+
+					var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
+					minDistance = Math.min(distance, minDistance);
+					
+					if (!cop.isUnderBombEffect && distance < minCatchDistance) {
+						minCatchDistance = distance;
+					}
+				}
+
+				if (minDistance < Config.copSoundRadius) {
+					_policeSound.volume = (1 - minDistance / Config.copSoundRadius) * Config.POLICE_VOLUME;
+				} else {
+					_policeSound.volume = 0;
+				}
+
+				if (minCatchDistance < Config.copCatchRadius) {
+					FlxG.loadSound(Assets.THIS_IS_THE_LAW, Config.THIS_IS_THE_LAW_VOLUME, false, true, true);
+
+					// TODO: GAME OVER
+				}
 			}
 		}
 

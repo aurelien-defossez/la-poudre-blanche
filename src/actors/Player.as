@@ -135,39 +135,42 @@ package actors {
 				}
 			}
 			else {
-				if (direction.x == 1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
-				}
-				else if (direction.x == -1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
-				}
-				else if (direction.y == 1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
-				}
-				else if (direction.y == -1) {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
-				}
-				else {
-					frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
-				}
+				stop();
 			}
 
 			// Check for collision with buildings
 			FlxG.collide(_collideMap, this);
 
-			if (!moveThisFrame) {
-				if (_runTimer > 0 && _runSound != null) {
-					_runSound.stop();
-					_runSound.destroy();
-					_runSound = null;
-				} else if(_walkSound != null){
-					_walkSound.stop();
-					_walkSound.destroy();
-					_walkSound = null;
-				}
-			}
 			moveThisFrame = false;
 			super.update();
+		}
+		
+		public function stop() : void {
+			if (_runSound != null) {
+				_runSound.stop();
+				_runSound.destroy();
+				_runSound = null;
+			} else if(_walkSound != null){
+				_walkSound.stop();
+				_walkSound.destroy();
+				_walkSound = null;
+			}
+			
+			if (direction.x == 1) {
+				frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["east"] + Assets.STANDING_FRAME;
+			}
+			else if (direction.x == -1) {
+				frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["west"] + Assets.STANDING_FRAME;
+			}
+			else if (direction.y == 1) {
+				frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
+			}
+			else if (direction.y == -1) {
+				frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["north"] + Assets.STANDING_FRAME;
+			}
+			else {
+				frame = Assets.TOTAL_FRAMES * Assets.DIRECTIONS["south"] + Assets.STANDING_FRAME;
+			}
 		}
 
 		public function changedTile() : Boolean {
