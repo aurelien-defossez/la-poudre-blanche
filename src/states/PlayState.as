@@ -63,7 +63,7 @@ package states
 		private var _policeSound:FlxSound;
 
 		/** The current level */
-		private var _currentLevel:Number = 0;
+		private var _currentLevel:Number;
 
 		private var _randomMachine:RandomMachine;
 
@@ -236,12 +236,13 @@ package states
 
 				if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
 					FlxG.loadSound(Assets.MESSIAH, 1, false, true, true);
+					
+					_currentLevel++;
 
-					if (_currentLevel + 1 > Config.levelMax) {
+					if (_currentLevel == Config.levelMax) {
 						FlxG.switchState(new EndGameState());
-					}
-					else {
-						FlxG.switchState(new PlayState(_currentLevel + 1));
+					} else {
+						FlxG.switchState(new PlayState(_currentLevel));
 					}
 				}
 
