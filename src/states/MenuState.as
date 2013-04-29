@@ -24,8 +24,6 @@ package states
 			FlxG.mouse.show();
 
 			_playRectangle = new FlxRect(0, 180, FlxG.width, 110);
-			_creditsRectangle = new FlxRect(0, 290, FlxG.width, 110);
-			_exitRectangle = new FlxRect(0, 400, FlxG.width, 110);
 
 			var background:FlxSprite = new FlxSprite();
 			background.makeGraphic(FlxG.width, FlxG.height, 0xff020322);
@@ -47,16 +45,6 @@ package states
 				_cursor.y = _playRectangle.y;
 				if (clicked) {
 					FlxG.switchState(new PlayState(0));
-				}
-			} else if (mouseInRect(_creditsRectangle)) {
-				_cursor.y = _creditsRectangle.y;
-				if (clicked) {
-					// TODO
-				}
-			} else if (mouseInRect(_exitRectangle)) {
-				_cursor.y = _exitRectangle.y;
-				if (clicked) {
-					// TODO
 				}
 			}
 		}
