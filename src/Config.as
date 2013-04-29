@@ -29,6 +29,8 @@ package
 		public static const ninjaBombIntox:Number = 2;
 		public static const ninjaBombRadius:Number = 200;
 		public static const ponycornAlphaSpeed:Number = 0.02;
+		public static const speedDrugSoundPerception:Number = 0.25;
+		public static const speedDrugSoundPerceptionFadeOut:Number = 0.5;
 
 		// Sounds
 		public static const SNIF_VOLUME:Number = 1.0;

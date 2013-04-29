@@ -50,6 +50,10 @@ package states
 		/** Hallucinations blocking the player */
 		private var _hallucinations:FlxGroup;
 		private var _spawnedHallucinations:Array;
+		
+		/** Speed sound effect */
+		private var _speedSoundPerception:Number;
+		private var _speedSoundFadeOutTime:Number;
 
 		/** Buildings*/
 		private var _buildings:Array;
@@ -73,6 +77,8 @@ package states
 			_currentLevel = level;
 			_levelFinished = false;
 			_levelFinishedCounter = 0;
+			_speedSoundPerception = 1;
+			_speedSoundFadeOutTime = 0;
 		}
 
 		public override function create() : void {
@@ -209,6 +215,16 @@ package states
 		}
 
 		public override function update() : void {
+			if (_speedSoundFadeOutTime > 0) {
+				_speedSoundFadeOutTime -= FlxG.elapsed;
+				
+				if (_speedSoundFadeOutTime < 0) {
+					_speedSoundFadeOutTime = 0;
+				}
+				
+				_speedSoundPerception = Config.speedDrugSoundPerception + (1 - Config.speedDrugSoundPerception) * (1 - _speedSoundFadeOutTime / Config.speedDrugSoundPerceptionFadeOut)
+			}
+			
 			if (_levelFinished) {
 				_levelFinishedCounter += FlxG.elapsed;
 				
@@ -230,8 +246,8 @@ package states
 
 				// Update music volume
 				var proximity:Number = Math.max(0, 1 - (_map.distanceToSource(_player.getMidpoint()) / _map.length));
-				_bass.volume = proximity * Config.MUSIC_VOLUME;
-				_music.volume = (proximity > 0.5) ? (proximity - 0.5) * 2 * Config.MUSIC_VOLUME : 0;
+				_bass.volume = proximity * Config.MUSIC_VOLUME * _speedSoundPerception;
+				_music.volume = (proximity > 0.5) ? (proximity - 0.5) * 2 * Config.MUSIC_VOLUME * _speedSoundPerception: 0;
 
 				// Update buildings manually
 				for (i = 0; i < _map.nRows; i++) {
@@ -319,7 +335,7 @@ package states
 				}
 
 				if (minDistance < Config.copSoundRadius) {
-					_policeSound.volume = (1 - minDistance / Config.copSoundRadius) * Config.POLICE_VOLUME;
+					_policeSound.volume = (1 - minDistance / Config.copSoundRadius) * Config.POLICE_VOLUME * _speedSoundPerception;
 				} else {
 					_policeSound.volume = 0;
 				}
@@ -330,6 +346,14 @@ package states
 					// TODO: GAME OVER
 				}
 			}
+		}
+		
+		public function fadeSounds() : void {
+			_speedSoundPerception = Config.speedDrugSoundPerception;
+		}
+		
+		public function stopFadeSounds() : void {
+			_speedSoundFadeOutTime = Config.speedDrugSoundPerceptionFadeOut;
 		}
 
 		private function getBuilding(i:Number, j:Number) : Building {

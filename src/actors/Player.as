@@ -68,6 +68,11 @@ package actors {
 			if (_runTimer > 0) {
 				_runTimer -= FlxG.elapsed;
 				speed = Config.playerRunSpeed;
+				
+				if (_runTimer <= 0) {
+					_runTimer = 0;
+					_state.stopFadeSounds();
+				}
 			} else {
 				_runTimer = 0;
 				speed = Config.playerWalkSpeed;
@@ -100,20 +105,21 @@ package actors {
 			if (_drugCounter > 0) {
 				// Speed shoot
 				if (_inputController.actionA && _drugCounter >= Config.runPrice) {
+					FlxG.play(Assets.SNIF, Config.SNIF_VOLUME);
 					_intoxication += Config.runIntox;
 					_drugCounter -= Config.runPrice;
 					_runTimer += Config.runTime;
 					_state.spawnHallucination();
-					FlxG.play(Assets.SNIF, Config.SNIF_VOLUME);
+					_state.fadeSounds();
 				}
 
 				// Ninja powder
 				if (_inputController.actionB && _drugCounter >= Config.ninjaPrice) {
+					FlxG.play(Assets.POUF, Config.POUF_VOLUME);
 					_intoxication += Config.ninjaBombIntox;
 					_drugCounter -= Config.ninjaPrice;
 					_state.dropBomb(x + width / 2, y + height / 2);
 					_state.spawnHallucination();
-					FlxG.play(Assets.POUF, Config.POUF_VOLUME);
 				}
 			}
 
