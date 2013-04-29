@@ -43,6 +43,7 @@ package
 		public static const MUSIC_VOLUME:Number = 1.0;
 
 		public static const MESSIAH_DURATION:Number = 6.0;
+		public static const THIS_IS_THE_LAW_DURATION:Number = 4.0;
 
 		// Levels
 		public static const levels:Array = [ {

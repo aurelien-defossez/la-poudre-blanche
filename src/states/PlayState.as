@@ -356,9 +356,7 @@ package states
 				}
 
 				if (minCatchDistance < Config.copCatchRadius) {
-					FlxG.loadSound(Assets.THIS_IS_THE_LAW, Config.THIS_IS_THE_LAW_VOLUME, false, true, true);
-
-					// TODO: GAME OVER
+					FlxG.switchState(new GameOverState());
 				}
 			}
 		}
