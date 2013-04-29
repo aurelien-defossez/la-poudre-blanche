@@ -19,6 +19,7 @@ package
 		[Embed(source = "/gfx/menu-starttitre.png")] public static const START_MENU:Class;
 		[Embed(source = "/gfx/menu-startponeyarcenciel.png")] public static const MENU_CURSOR:Class;
 		[Embed(source = "/gfx/menu-title.png")] public static const MENU_TITLE:Class;
+		[Embed(source = "/gfx/tutorial.png")] public static const TUTORIAL:Class;
 		[Embed(source = "/gfx/screen-end-game.png")] public static const MENU_GAMEOVER:Class;
 
 		// Buildings

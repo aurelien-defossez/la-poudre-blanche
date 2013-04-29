@@ -14,8 +14,6 @@ package states
 
 		private var _cursor:FlxSprite;
 		private var _playRectangle:FlxRect;
-		private var _creditsRectangle:FlxRect;
-		private var _exitRectangle:FlxRect;
 
 		public function MenuState() {
 		}
@@ -44,7 +42,7 @@ package states
 			if (mouseInRect(_playRectangle)) {
 				_cursor.y = _playRectangle.y;
 				if (clicked) {
-					FlxG.switchState(new PlayState(0));
+					FlxG.switchState(new TutorialState());
 				}
 			}
 		}
