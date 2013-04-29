@@ -42,7 +42,7 @@ package
 		public static const THIS_IS_THE_LAW_VOLUME:Number = 1.0;
 		public static const MESSIAH_VOLUME:Number = 1.0;
 		public static const MUSIC_VOLUME:Number = 1.0;
-		
+
 		public static const MESSIAH_DURATION:Number = 6.0;
 
 		// Levels
@@ -71,7 +71,8 @@ package
 				{ x: 6, y: 1 },
 				{ x: 6, y: 4 },
 				{ x: 4, y: 4 }
-			]
+			],
+			time: 30 // in seconds
 		}, {
 			map:
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
@@ -87,7 +88,8 @@ package
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0",
 			player: { x: 1, y: 3 },
 			target: { x: 6, y: 11 },
-			cops: []
+			cops: [],
+			time: 40 // in seconds
 		}, {
 			map:
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\n" +
@@ -108,7 +110,8 @@ package
 				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
 			player: { x: 13, y: 6 },
 			target: { x: 9, y: 8 },
-			cops: []
+			cops: [],
+			time: 60 // in seconds
 		},];
 		public static const levelMax:Number = levels.length;
 	}

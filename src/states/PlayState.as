@@ -50,7 +50,7 @@ package states
 		/** Hallucinations blocking the player */
 		private var _hallucinations:FlxGroup;
 		private var _spawnedHallucinations:Array;
-		
+
 		/** Speed sound effect */
 		private var _speedSoundPerception:Number;
 		private var _speedSoundFadeOutTime:Number;
@@ -70,15 +70,21 @@ package states
 		private var _currentLevel:Number;
 		private var _levelFinished:Boolean;
 		private var _levelFinishedCounter:Number;
+		private var _levelTimeLeft:Number;
+
+		private var _score:Number;
+
+		private var _hud:Hud;
 
 		private var _randomMachine:RandomMachine;
 
-		public function PlayState(level:Number) {
+		public function PlayState(level:Number, score:Number=0) {
 			_currentLevel = level;
 			_levelFinished = false;
 			_levelFinishedCounter = 0;
 			_speedSoundPerception = 1;
 			_speedSoundFadeOutTime = 0;
+			_score = score;
 		}
 
 		public override function create() : void {
@@ -153,12 +159,16 @@ package states
 			add(_buildingRoofs);
 
 			// HUD
-			add(new Hud(_player));
+			_hud = new Hud(_player);
+			_hud.score = _score;
+			add(_hud);
 		}
 
 		public function loadLevel(mapId:int) : void {
 			_map = new Map();
 			_map.load(Config.levels[mapId]);
+
+			_levelTimeLeft = Config.levels[mapId]['time'];
 
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
@@ -217,28 +227,31 @@ package states
 		public override function update() : void {
 			if (_speedSoundFadeOutTime > 0) {
 				_speedSoundFadeOutTime -= FlxG.elapsed;
-				
+
 				if (_speedSoundFadeOutTime < 0) {
 					_speedSoundFadeOutTime = 0;
 				}
-				
+
 				_speedSoundPerception = Config.speedDrugSoundPerception + (1 - Config.speedDrugSoundPerception) * (1 - _speedSoundFadeOutTime / Config.speedDrugSoundPerceptionFadeOut)
 			}
-			
+
 			if (_levelFinished) {
 				_levelFinishedCounter += FlxG.elapsed;
-				
+
 				if (_levelFinishedCounter >= Config.MESSIAH_DURATION) {
 					_currentLevel++;
 
 					if (_currentLevel == Config.levelMax) {
 						FlxG.switchState(new EndGameState());
 					} else {
-						FlxG.switchState(new PlayState(_currentLevel));
+						FlxG.switchState(new PlayState(_currentLevel, _score));
 					}
 				}
 			} else {
 				super.update();
+
+				// Update the remaining time in the current level
+				_levelTimeLeft -= FlxG.elapsed;
 
 				var i:int;
 				var j:int;
@@ -269,8 +282,10 @@ package states
 
 					if (playerPosition.i == _map.targetTile.x && playerPosition.j == _map.targetTile.y) {
 						FlxG.loadSound(Assets.MESSIAH, Config.MESSIAH_VOLUME, false, true, true);
-						
+
 						_levelFinished = true;
+						computeScore();
+						_hud.update();
 						_policeSound.fadeOut(0.5);
 						_player.stop();
 					}
@@ -328,7 +343,7 @@ package states
 
 					var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
 					minDistance = Math.min(distance, minDistance);
-					
+
 					if (!cop.isUnderBombEffect && distance < minCatchDistance) {
 						minCatchDistance = distance;
 					}
@@ -347,11 +362,11 @@ package states
 				}
 			}
 		}
-		
+
 		public function fadeSounds() : void {
 			_speedSoundPerception = Config.speedDrugSoundPerception;
 		}
-		
+
 		public function stopFadeSounds() : void {
 			_speedSoundFadeOutTime = Config.speedDrugSoundPerceptionFadeOut;
 		}
@@ -385,7 +400,7 @@ package states
 
 		public function spawnHallucination() : void {
 			FlxG.play(Assets.PLOP, Config.PLOP_VOLUME);
-			
+
 			// Get a random road tile
 			var tx:int = -1;
 			var ty:int = -1;
@@ -408,7 +423,7 @@ package states
 				}
 			}
 
-			if(possibleTiles.length > 0 ) {
+			if (possibleTiles.length > 0 ) {
 				// Spawn a random hallucination
 				var randomTile:FlxPoint = possibleTiles[_randomMachine.nextMax(possibleTiles.length)];
 				var x:int = randomTile.x * Config.tileSize;
@@ -466,6 +481,16 @@ package states
 					_actors.add(pony);
 				}
 			}
+		}
+
+		private function computeScore() : void {
+			var levelScore:Number = _player.drugCounter * 100;
+			levelScore += _levelTimeLeft * 10;
+			if (levelScore < 0) {
+				levelScore = 0;
+			}
+			_score += levelScore;
+			_hud.score = _score;
 		}
 	}
 }
