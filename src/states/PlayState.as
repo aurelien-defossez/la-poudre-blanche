@@ -70,6 +70,7 @@ package states
 		private var _currentLevel:Number;
 		private var _levelFinished:Boolean;
 		private var _levelFinishedCounter:Number;
+		private var _levelTime:Number;
 		private var _levelTimeLeft:Number;
 
 		private var _score:Number;
@@ -165,10 +166,10 @@ package states
 		public function loadLevel(mapId:int) : void {
 			_map = new Map();
 			_map.load(Config.levels[mapId]);
-			
+
 			_player = new Player(_inputController, this, _map);
 
-			_levelTimeLeft = Config.levels[mapId]['time'];
+			_levelTimeLeft = _levelTime = Config.levels[mapId]['time'];
 
 			// Background tilemap
 			_backgroundTilemap = new FlxTilemap();
@@ -483,7 +484,7 @@ package states
 
 		private function computeScore() : void {
 			var levelScore:Number = _player.drugCounter * 100;
-			levelScore += _levelTimeLeft * 10;
+			levelScore *= 1 + _levelTimeLeft / _levelTime;
 			if (levelScore < 0) {
 				levelScore = 0;
 			}
