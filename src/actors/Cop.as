@@ -28,6 +28,7 @@ package actors {
 		private var _currentDirection:uint = FlxObject.RIGHT;
 
 		public function get currentDirection() : uint { return _currentDirection; };
+		public function get isUnderBombEffect() : Boolean { return _bombTimer > 0; };
 
 		public function Cop(collideMap:FlxTilemap, map:Map, player:Player) {
 			_player = player;

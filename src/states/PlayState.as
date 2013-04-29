@@ -293,11 +293,16 @@ package states
 
 			// Check for cops around the player
 			var minDistance:Number = Number.POSITIVE_INFINITY;
+			var minCatchDistance:Number = Number.POSITIVE_INFINITY;
 			for (var c:int = 0; c < _cops.length; c++) {
 				var cop:Cop = _cops.members[c];
 
 				var distance:Number = FlxU.getDistance(new FlxPoint(_player.x, _player.y), new FlxPoint(cop.x, cop.y));
 				minDistance = Math.min(distance, minDistance);
+				
+				if (!cop.isUnderBombEffect && distance < minCatchDistance) {
+					minCatchDistance = distance;
+				}
 			}
 
 			if (minDistance < Config.copSoundRadius) {
@@ -306,7 +311,7 @@ package states
 				_policeSound.volume = 0;
 			}
 
-			if (minDistance < Config.copCatchRadius) {
+			if (minCatchDistance < Config.copCatchRadius) {
 				FlxG.loadSound(Assets.THIS_IS_THE_LAW, Config.THIS_IS_THE_LAW_VOLUME, false, true, true);
 
 				// TODO: End of game

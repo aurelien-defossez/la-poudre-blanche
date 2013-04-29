@@ -12,7 +12,7 @@ package
 		// Player
 		public static const playerWalkSpeed:Number = 2;
 		public static const playerRunSpeed:Number = 4;
-		public static const baseDrugCount:int = 2500;
+		public static const baseDrugCount:int = 100;
 		public static const runPrice:int = 2;
 		public static const ninjaPrice:int = 10;
 
