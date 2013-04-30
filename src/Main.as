@@ -1,10 +1,8 @@
 package
 {
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import org.flixel.FlxGame;
-	import states.MenuState;
-	import states.PlayState;
+
+	import states.SplashScreenState;
 
 	/**
 	 * ...
@@ -15,7 +13,7 @@ package
 
 
 		public function Main() : void {
-			super(800, 600, MenuState, 1);
+			super(800, 600, SplashScreenState, 1);
 		}
 	}
 

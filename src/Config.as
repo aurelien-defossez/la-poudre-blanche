@@ -44,6 +44,7 @@ package
 
 		public static const MESSIAH_DURATION:Number = 6.0;
 		public static const THIS_IS_THE_LAW_DURATION:Number = 4.0;
+		public static const SPLASH_SCREEN_DURATION:Number = 3.0;
 
 		// Levels
 		public static const levels:Array = [ {
@@ -164,7 +165,7 @@ package
 			randomCops: 0,
 			drug: 300
 		}];
-		
+
 		public static const levelMax:Number = levels.length;
 	}
 
